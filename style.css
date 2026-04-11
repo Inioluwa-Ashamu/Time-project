@@ -26,6 +26,10 @@ html {
     scroll-behavior: smooth;
 }
 
+section[id] {
+    scroll-margin-top: 7rem;
+}
+
 body {
     min-height: 100vh;
     background:
@@ -454,10 +458,6 @@ img {
 @media (max-width: 640px) {
     .container {
         width: min(calc(100% - 1.25rem), var(--container));
-    }
-
-    .site-header {
-        position: static;
     }
 
     .brand {
