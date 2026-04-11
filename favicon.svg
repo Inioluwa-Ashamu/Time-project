@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="Time Specialist Support">
+  <defs>
+    <linearGradient id="g" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#a06b4c" />
+      <stop offset="100%" stop-color="#5b3b31" />
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="18" fill="url(#g)" />
+  <path d="M32 16a16 16 0 1 0 16 16A16 16 0 0 0 32 16Zm0 4a12 12 0 1 1-12 12A12 12 0 0 1 32 20Z" fill="#f8f2ea"/>
+  <path d="M32 24h3v10l7 4-1.5 2.6L29 34V24Z" fill="#f8f2ea"/>
+</svg>
