@@ -13,12 +13,12 @@
     --accent-deep: #30483b;
     --dark: #16222a;
     --dark-soft: #223340;
-    --shadow-lg: 0 28px 70px rgba(54, 35, 25, 0.14);
-    --shadow-md: 0 18px 42px rgba(54, 35, 25, 0.1);
-    --radius-xl: 32px;
-    --radius-lg: 24px;
-    --radius-md: 18px;
-    --radius-sm: 14px;
+    --shadow-lg: 0 18px 44px rgba(54, 35, 25, 0.1);
+    --shadow-md: 0 10px 24px rgba(54, 35, 25, 0.08);
+    --radius-xl: 26px;
+    --radius-lg: 20px;
+    --radius-md: 16px;
+    --radius-sm: 12px;
     --container: 1180px;
 }
 
@@ -79,7 +79,7 @@ select {
     top: 0;
     z-index: 100;
     border-bottom: 1px solid rgba(61, 43, 33, 0.08);
-    background: rgba(244, 238, 231, 0.74);
+    background: rgba(247, 242, 236, 0.86);
     backdrop-filter: blur(20px);
     transition: box-shadow 0.2s ease, background-color 0.2s ease;
 }
@@ -179,7 +179,6 @@ body.is-scrolled .site-header {
 .site-nav a.is-current {
     background: rgba(255, 255, 255, 0.78);
     color: var(--brand-deep);
-    transform: translateY(-1px);
 }
 
 .hero,
@@ -215,10 +214,10 @@ body.is-scrolled .site-header {
 }
 
 .hero-copy {
-    padding: 3rem;
+    padding: 2.75rem;
     border-radius: var(--radius-xl);
     background:
-        linear-gradient(160deg, rgba(255, 250, 245, 0.96), rgba(244, 233, 220, 0.88)),
+        linear-gradient(160deg, rgba(255, 250, 245, 0.97), rgba(245, 236, 226, 0.9)),
         linear-gradient(135deg, rgba(111, 133, 121, 0.08), transparent 60%);
 }
 
@@ -231,8 +230,8 @@ body.is-scrolled .site-header {
     content: "";
     position: absolute;
     inset: auto -8% -20% auto;
-    width: 280px;
-    height: 280px;
+    width: 220px;
+    height: 220px;
     border-radius: 50%;
     background: radial-gradient(circle, rgba(111, 133, 121, 0.14), transparent 70%);
     pointer-events: none;
@@ -327,13 +326,13 @@ h3 {
 .button:focus-visible,
 .text-link:hover,
 .text-link:focus-visible {
-    transform: translateY(-2px);
+    transform: translateY(-1px);
 }
 
 .button-primary {
     background: linear-gradient(135deg, var(--brand) 0%, var(--brand-deep) 100%);
     color: #fff;
-    box-shadow: 0 20px 38px rgba(88, 57, 45, 0.22);
+    box-shadow: 0 12px 26px rgba(88, 57, 45, 0.16);
 }
 
 .button-secondary,
@@ -368,8 +367,7 @@ h3 {
 .glass-card {
     padding: 2rem;
     border-radius: var(--radius-xl);
-    background:
-        linear-gradient(180deg, rgba(230, 220, 206, 0.88), rgba(255, 251, 246, 0.88));
+    background: linear-gradient(180deg, rgba(237, 227, 214, 0.88), rgba(255, 251, 246, 0.92));
 }
 
 .check-list {
@@ -409,7 +407,7 @@ h3 {
 .quote-card {
     padding: 1.2rem;
     border-radius: var(--radius-md);
-    background: rgba(255, 255, 255, 0.58);
+    background: rgba(255, 255, 255, 0.68);
     border: 1px solid rgba(88, 57, 45, 0.1);
 }
 
@@ -429,7 +427,7 @@ h3 {
 }
 
 .section-soft {
-    background: linear-gradient(180deg, rgba(240, 228, 214, 0.44), rgba(248, 245, 241, 0));
+    background: linear-gradient(180deg, rgba(240, 228, 214, 0.32), rgba(248, 245, 241, 0));
 }
 
 .section-accent {
@@ -438,8 +436,8 @@ h3 {
 
 .section-dark {
     background:
-        radial-gradient(circle at top right, rgba(141, 92, 67, 0.24), transparent 30%),
-        linear-gradient(180deg, var(--dark-soft) 0%, var(--dark) 100%);
+        radial-gradient(circle at top right, rgba(141, 92, 67, 0.16), transparent 30%),
+        linear-gradient(180deg, #243642 0%, #1c2d37 100%);
     color: #f6efe8;
 }
 
@@ -514,7 +512,7 @@ h3 {
 .split-panel {
     padding: 1.5rem;
     border-radius: var(--radius-lg);
-    background: var(--surface);
+    background: rgba(255, 252, 248, 0.86);
 }
 
 .timeline-card {
@@ -574,7 +572,7 @@ h3 {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
-    background: linear-gradient(140deg, rgba(255, 248, 241, 0.92), rgba(235, 222, 207, 0.94));
+    background: linear-gradient(140deg, rgba(255, 249, 243, 0.96), rgba(239, 228, 215, 0.94));
 }
 
 .avatar {
@@ -613,7 +611,7 @@ h3 {
     padding: 2rem;
     border: 1px solid var(--line);
     border-radius: var(--radius-xl);
-    background: rgba(255, 252, 248, 0.72);
+    background: rgba(255, 252, 248, 0.82);
     box-shadow: var(--shadow-md);
 }
 
