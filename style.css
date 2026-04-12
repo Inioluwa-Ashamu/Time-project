@@ -310,6 +310,47 @@ h3 {
     margin-top: 2rem;
 }
 
+.trust-strip {
+    padding: 0 0 1.5rem;
+}
+
+.trust-strip-inner {
+    display: grid;
+    gap: 0.9rem;
+    padding: 1.1rem 1.35rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 252, 0.72);
+    box-shadow: var(--shadow-md);
+}
+
+.trust-label,
+.pathway-label {
+    color: var(--accent-deep);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+}
+
+.trust-points {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+.trust-points span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(47, 107, 71, 0.08);
+    color: var(--brand-deep);
+    font-size: 0.94rem;
+    font-weight: 600;
+}
+
 .button {
     display: inline-flex;
     align-items: center;
@@ -459,6 +500,13 @@ h3 {
     align-items: start;
 }
 
+.founder-note {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
 .section-heading {
     max-width: 820px;
     margin-bottom: 1.5rem;
@@ -481,14 +529,18 @@ h3 {
 .profile-grid,
 .quote-grid,
 .link-grid,
-.value-grid {
+.value-grid,
+.pathway-grid,
+.standard-grid,
+.detail-grid {
     display: grid;
     gap: 1rem;
 }
 
 .three-up,
 .quote-grid,
-.link-grid {
+.link-grid,
+.pathway-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -504,15 +556,48 @@ h3 {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+.standard-grid,
+.detail-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
 .info-card,
 .timeline-card,
 .profile-card,
 .resource-card,
 .contact-card,
-.split-panel {
+.split-panel,
+.pathway-card,
+.detail-card,
+.spotlight-panel {
     padding: 1.5rem;
     border-radius: var(--radius-lg);
     background: rgba(255, 255, 252, 0.9);
+}
+
+.pathway-card,
+.detail-card,
+.spotlight-panel {
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow-md);
+}
+
+.pathway-card h3,
+.detail-card h3 {
+    color: var(--brand-deep);
+    margin-top: 0.35rem;
+}
+
+.pathway-card p,
+.detail-card p {
+    margin-top: 0.7rem;
+    color: var(--muted);
+}
+
+.spotlight-panel {
+    background:
+        linear-gradient(160deg, rgba(241, 245, 233, 0.98), rgba(255, 255, 251, 0.96)),
+        linear-gradient(135deg, rgba(215, 191, 68, 0.08), transparent 60%);
 }
 
 .timeline-card {
@@ -639,6 +724,9 @@ h3 {
     .three-up,
     .quote-grid,
     .value-grid,
+    .pathway-grid,
+    .standard-grid,
+    .detail-grid,
     .timeline-grid,
     .footer-grid {
         grid-template-columns: 1fr 1fr;
@@ -686,6 +774,7 @@ h3 {
 
     .hero-grid,
     .feature-layout,
+    .founder-note,
     .two-column,
     .contact-layout,
     .split-heading,
@@ -696,6 +785,9 @@ h3 {
     .quote-grid,
     .link-grid,
     .value-grid,
+    .pathway-grid,
+    .standard-grid,
+    .detail-grid,
     .footer-grid,
     .hero-metrics {
         grid-template-columns: 1fr;
