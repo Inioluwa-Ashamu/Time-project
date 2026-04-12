@@ -24,10 +24,17 @@ window.teamDirectoryConfig = {
         }, 
         {
             name: "Richard",
-            role: "Office Team",
+            role: "Office Supervisor",
             team: "office",
             image_url: "https://time-specialist-support.com/wp-content/uploads/2024/03/Richard.jpg",
             bio: "Hi, I've been working for TSS for over 10 years. I started as a support worker while also working as a teaching assistant in a secondary school. Over the last couple of years, I have moved to working in the office full-time. When I am not working I love hiking, reading and playing board games."
+        },
+        {
+            name: "Isaac",
+            role: "Digital Project Coordinator",
+            team: "office",
+            image_url: "https://time-specialist-support.com/wp-content/uploads/2024/03/Isaac.jpg",
+            bio: "Hi, I'm Isaac, an Artificial Intelligence student at Manchester Metropolitan University. Supporting young autistic people brings me immense fulfillment, there's nothing more rewarding than seeing them thrive with the right support. I'm driven by a deep desire to make a positive, lasting impact and help create a world where everyone can reach their full potential. Outside of work, you'll find me exploring new technologies, discovering hidden gems in the city, and cherishing moments with my friends and family."
         },
         {
             name: "Aabhya",
