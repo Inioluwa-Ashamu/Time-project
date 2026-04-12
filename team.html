@@ -47,113 +47,74 @@
                     <p class="eyebrow">Meet the team</p>
                     <h1>The people behind the service.</h1>
                     <p class="lead">
-                        Families place a great deal of trust in the people supporting them. We think it matters to
-                        show who is behind the service and the values that shape the way we work.
+                        Families place a great deal of trust in the people supporting them. This page brings the
+                        office team and support workers into one clearer, more searchable directory.
                     </p>
                 </div>
             </section>
 
             <section class="section">
                 <div class="container">
-                    <div class="section-heading">
-                        <p class="section-tag">Office team</p>
-                        <h2>Experienced leadership, recruitment, and coordination.</h2>
+                    <div class="section-heading split-heading">
+                        <div>
+                            <p class="section-tag">Office team</p>
+                            <h2>Experienced leadership, recruitment, and coordination.</h2>
+                        </div>
+                        <p class="section-intro">
+                            These are the people behind matching, recruitment, communication, and day-to-day service quality.
+                        </p>
                     </div>
 
-                    <div class="profile-grid">
-                        <article class="profile-card large-profile">
-                            <div class="avatar">TH</div>
-                            <h3>Tori</h3>
-                            <p class="profile-role">Founder and Director</p>
-                            <p>
-                                Tori is the Founder and Director of Time Specialist Support. Her background is in
-                                Speech and Language Therapy, and she has built the service around thoughtful
-                                matching, autism-specific understanding, and support that feels genuinely reliable
-                                for families.
+                    <div class="office-directory" id="office-directory" aria-live="polite"></div>
+                </div>
+            </section>
+
+            <section class="section section-soft">
+                <div class="container">
+                    <div class="team-search-panel">
+                        <div class="section-heading">
+                            <p class="section-tag">Support workers</p>
+                            <h2>Search the wider support team.</h2>
+                            <p class="section-intro">
+                                Like the original site, this section is designed to help families and applicants browse
+                                support-worker profiles quickly, with a cleaner search experience.
                             </p>
-                        </article>
-                        <article class="profile-card large-profile">
-                            <div class="avatar">AL</div>
-                            <h3>Ally</h3>
-                            <p class="profile-role">Service Manager</p>
-                            <p>
-                                Ally joined Time in July 2016 and leads the day-to-day service as Service Manager.
-                                She supports families and staff across a wide range of situations, with a strong
-                                focus on consistency, communication, and giving people a positive experience of the service.
-                            </p>
-                        </article>
-                        <article class="profile-card large-profile">
-                            <div class="avatar">JA</div>
-                            <h3>Jack</h3>
-                            <p class="profile-role">Recruitment Co-ordinator</p>
-                            <p>
-                                Jack is the Recruitment Co-ordinator at Time Specialist Support. He focuses on
-                                strengthening the support worker team and bringing in people who are well suited to
-                                autism-specific, relationship-led support work.
-                            </p>
-                        </article>
-                        <article class="profile-card large-profile">
-                            <div class="avatar">RI</div>
-                            <h3>Richard</h3>
-                            <p class="profile-role">Office Team</p>
-                            <p>
-                                Richard has been part of Time for over 10 years. After starting as a support worker
-                                alongside teaching assistant work, he moved into the office team full-time and
-                                brings valuable frontline understanding to service coordination.
-                            </p>
-                        </article>
+                        </div>
+
+                        <label class="search-field" for="support-worker-search">
+                            <span class="search-label">Search by name, role, or bio</span>
+                            <input
+                                id="support-worker-search"
+                                type="search"
+                                name="support-worker-search"
+                                placeholder="Search support workers"
+                                autocomplete="off"
+                            >
+                        </label>
+
+                        <p class="search-meta" id="support-worker-count">Loading support-worker profiles...</p>
                     </div>
+
+                    <div class="support-directory" id="support-directory" aria-live="polite"></div>
+                    <p class="empty-state" id="support-empty-state" hidden>No support workers match that search yet.</p>
                 </div>
             </section>
 
             <section class="section">
                 <div class="container founder-note">
                     <div class="spotlight-panel">
-                        <p class="section-tag">Why we show the team</p>
-                        <h2>The people behind the service matter.</h2>
+                        <p class="section-tag">How this page can work long term</p>
+                        <h2>Ready for a Google Sheet-driven directory.</h2>
                     </div>
                     <div class="section-intro">
                         <p>
-                            Families often want more than a service description. They want to know who is making
-                            decisions, who is coordinating support, and what kind of people sit behind the organisation.
+                            The page can work from a simple staff dataset with fields like name, role, bio, team,
+                            and image URL. That means you can keep the design polished while making updates easier.
                         </p>
                         <p>
-                            We think that visibility matters, because good support is built on trust as much as it
-                            is on process.
+                            Right now it has built-in fallback data, and it can later be connected to a published
+                            Google Sheet or JSON endpoint without redesigning the page again.
                         </p>
-                    </div>
-                </div>
-            </section>
-
-            <section class="section section-soft">
-                <div class="container">
-                    <div class="section-heading">
-                        <p class="section-tag">Wider support team</p>
-                        <h2>A broader team chosen for warmth, patience, reliability, and readiness to learn.</h2>
-                    </div>
-
-                    <div class="card-grid three-up">
-                        <article class="info-card">
-                            <h3>Carefully selected support workers</h3>
-                            <p>
-                                The live service highlights dependable, warm support workers who can build trust at
-                                the right pace and adapt well to autistic young people and family routines.
-                            </p>
-                        </article>
-                        <article class="info-card">
-                            <h3>Student and early-career talent</h3>
-                            <p>
-                                Many of our workers are building experience in education, psychology, therapy, care,
-                                and related fields while developing strong practical skills.
-                            </p>
-                        </article>
-                        <article class="info-card">
-                            <h3>Relationship-led support</h3>
-                            <p>
-                                Beyond qualifications, what matters most is patience, good judgment, and the ability
-                                to build positive, respectful relationships.
-                            </p>
-                        </article>
                     </div>
                 </div>
             </section>
@@ -208,6 +169,7 @@
         </footer>
     </div>
 
+    <script src="team-data.js" defer></script>
     <script src="script.js" defer></script>
 </body>
 </html>
