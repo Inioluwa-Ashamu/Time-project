@@ -149,6 +149,39 @@ const parseCsv = (csvText) => {
     });
 };
 
+const buildGoogleSheetsCsvUrl = (source) => {
+    if (!source || !source.sheetId) {
+        return "";
+    }
+
+    const url = new URL(`https://docs.google.com/spreadsheets/d/${source.sheetId}/gviz/tq`);
+    url.searchParams.set("tqx", "out:csv");
+
+    if (source.gid) {
+        url.searchParams.set("gid", source.gid);
+    }
+
+    if (source.sheetName) {
+        url.searchParams.set("sheet", source.sheetName);
+    }
+
+    return url.toString();
+};
+
+const resolveTeamEndpoint = (config) => {
+    const source = config.source || {};
+
+    if (source.type === "google-sheets-csv") {
+        return buildGoogleSheetsCsvUrl(source);
+    }
+
+    if (source.type === "json" || source.type === "csv") {
+        return source.endpoint || "";
+    }
+
+    return config.endpoint || source.endpoint || "";
+};
+
 const renderTeamCard = (member, variant = "support") => {
     const cardClass = variant === "office" ? "profile-card staff-card office-card" : "profile-card staff-card support-card";
     const imageMarkup = member.image_url
@@ -195,16 +228,23 @@ const initTeamDirectory = async () => {
 
     const config = window.teamDirectoryConfig || {};
     let teamMembers = Array.isArray(config.fallback) ? config.fallback.slice() : [];
+    const endpoint = resolveTeamEndpoint(config);
 
-    if (config.endpoint) {
+    if (endpoint) {
         try {
-            const response = await fetch(config.endpoint);
+            const response = await fetch(endpoint);
             if (!response.ok) {
                 throw new Error(`Request failed with ${response.status}`);
             }
 
             const contentType = response.headers.get("content-type") || "";
-            const payload = contentType.includes("text/csv")
+            const shouldParseCsv =
+                contentType.includes("text/csv") ||
+                contentType.includes("text/plain") ||
+                endpoint.includes("out:csv") ||
+                endpoint.includes("format=csv") ||
+                endpoint.endsWith(".csv");
+            const payload = shouldParseCsv
                 ? parseCsv(await response.text())
                 : await response.json();
 

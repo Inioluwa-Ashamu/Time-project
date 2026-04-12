@@ -1,5 +1,38 @@
 window.teamDirectoryConfig = {
-    endpoint: "",
+    /*
+    Choose one source type:
+    - "local": use the fallback array in this file
+    - "google-sheets-csv": fetch a published Google Sheet as CSV
+    - "json": fetch a JSON endpoint such as SheetDB
+    - "csv": fetch any public CSV endpoint
+
+    Google Sheets setup:
+    1. Create columns matching team-sheet-template.csv
+    2. In Google Sheets, go to File -> Share -> Publish to web
+    3. Publish the specific sheet tab as CSV
+    4. Paste the spreadsheet ID below, plus the gid for the tab you published
+
+    Example:
+    source: {
+        type: "google-sheets-csv",
+        sheetId: "1AbCdEfGhIjKlMnOpQrStUvWxYz1234567890",
+        gid: "0",
+        sheetName: ""
+    }
+
+    Optional SheetDB-style JSON example:
+    source: {
+        type: "json",
+        endpoint: "https://sheetdb.io/api/v1/your-endpoint-id"
+    }
+    */
+    source: {
+        type: "local",
+        endpoint: "",
+        sheetId: "",
+        gid: "",
+        sheetName: ""
+    },
     fallback: [
         {
             name: "Tori",
