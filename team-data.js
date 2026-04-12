@@ -21,7 +21,7 @@ window.teamDirectoryConfig = {
             team: "office",
             image_url: "https://time-specialist-support.com/wp-content/uploads/2024/03/Jack.jpg",
             bio: "Hi, I'm Jack and I am the Recruitment Co-ordinator at Time Specialist Support. I have around two years of experience in recruitment and want to use what I know to make the Time support worker team even stronger. In my spare time, I enjoy going out and socialising with friends."
-        },
+        }, 
         {
             name: "Richard",
             role: "Office Team",
