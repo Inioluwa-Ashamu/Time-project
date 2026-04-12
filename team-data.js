@@ -33,7 +33,7 @@ window.teamDirectoryConfig = {
             name: "Isaac",
             role: "Digital Project Coordinator",
             team: "office",
-            image_url: "https://time-specialist-support.com/wp-content/uploads/2024/03/Isaac.jpg",
+            image_url: "http://time-specialist-support.com/wp-content/uploads/2024/11/Photo-11-11-2024-13-09-54.jpg",
             bio: "Hi, I'm Isaac, an Artificial Intelligence student at Manchester Metropolitan University. Supporting young autistic people brings me immense fulfillment, there's nothing more rewarding than seeing them thrive with the right support. I'm driven by a deep desire to make a positive, lasting impact and help create a world where everyone can reach their full potential. Outside of work, you'll find me exploring new technologies, discovering hidden gems in the city, and cherishing moments with my friends and family."
         },
         {
