@@ -194,11 +194,13 @@ const renderTeamCard = (member, variant = "support") => {
                 ${imageMarkup}
                 <div class="staff-photo-fallback" aria-hidden="true">${escapeHtml(getInitials(member.name))}</div>
             </div>
-            <div class="staff-card-header">
-                <h3 class="staff-name">${escapeHtml(member.name)}</h3>
-                <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
+            <div class="staff-card-body">
+                <div class="staff-card-header">
+                    <h3 class="staff-name">${escapeHtml(member.name)}</h3>
+                    <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
+                </div>
+                <p>${escapeHtml(member.bio)}</p>
             </div>
-            <p>${escapeHtml(member.bio)}</p>
         </article>
     `;
 };

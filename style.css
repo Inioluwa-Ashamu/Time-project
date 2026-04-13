@@ -767,6 +767,10 @@ h3 {
 
 .office-card {
     padding: 1.5rem;
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.25rem;
 }
 
 .support-card {
@@ -781,6 +785,14 @@ h3 {
         radial-gradient(circle at top, rgba(215, 191, 68, 0.18), transparent 42%),
         linear-gradient(180deg, rgba(226, 234, 216, 0.94), rgba(246, 248, 241, 0.96));
     aspect-ratio: 4 / 3;
+}
+
+.office-card .staff-photo-wrap {
+    aspect-ratio: 4 / 4.9;
+    max-width: 220px;
+    width: 100%;
+    border: 1px solid rgba(21, 58, 40, 0.08);
+    box-shadow: 0 8px 18px rgba(18, 43, 31, 0.06);
 }
 
 .support-card .staff-photo-wrap {
@@ -813,13 +825,20 @@ h3 {
     gap: 0.35rem;
 }
 
+.staff-card-body {
+    display: grid;
+    align-content: start;
+    gap: 0.8rem;
+    min-width: 0;
+}
+
 .staff-name {
     color: var(--brand-deep);
     font-size: 1.45rem;
     line-height: 1.15;
 }
 
-.staff-card p:last-child {
+.staff-card-body p:last-child {
     color: var(--muted);
 }
 
@@ -1011,6 +1030,14 @@ h3 {
     .office-directory,
     .support-directory {
         grid-template-columns: 1fr;
+    }
+
+    .office-card {
+        grid-template-columns: 1fr;
+    }
+
+    .office-card .staff-photo-wrap {
+        max-width: min(100%, 280px);
     }
 
     .header-inner {
