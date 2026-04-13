@@ -1,10 +1,5 @@
 window.teamDirectoryConfig = {
-    source: {
-        type: "google-sheets-csv",
-        sheetId: "1SoD9mTNn2c0Lw_ZpUFgr7eAJSuVm-St0dLLD2g1eC6Q",
-        gid: "2077489984",
-        sheetName: ""
-    },
+    endpoint: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTEc0lO0TJJwNxrtSknoGG_XNDZL7G2VYeRdtly4vp3cnlcJhp6sRkecvYbDWZSIgvBjys-HP6ep6pa/pub?gid=2077489984&single=true&output=csv",
     fallback: [
         {
             name: "Tori",
