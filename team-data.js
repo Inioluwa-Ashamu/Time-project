@@ -26,7 +26,7 @@ window.teamDirectoryConfig = {
             team: "office",
             image_url: "https://time-specialist-support.com/wp-content/uploads/2024/03/Jack.jpg",
             bio: "Hi, I'm Jack and I am the Recruitment Co-ordinator at Time Specialist Support. I have around two years of experience in recruitment and want to use what I know to make the Time support worker team even stronger. In my spare time, I enjoy going out and socialising with friends."
-        }, 
+        },
         {
             name: "Richard",
             role: "Office Supervisor",
@@ -38,7 +38,7 @@ window.teamDirectoryConfig = {
             name: "Isaac",
             role: "Digital Project Coordinator",
             team: "office",
-            image_url: "http://time-specialist-support.com/wp-content/uploads/2024/11/Photo-11-11-2024-13-09-54.jpg",
+            image_url: "https://time-specialist-support.com/wp-content/uploads/2024/11/Photo-11-11-2024-13-09-54.jpg",
             bio: "Hi, I'm Isaac, an Artificial Intelligence student at Manchester Metropolitan University. Supporting young autistic people brings me immense fulfillment, there's nothing more rewarding than seeing them thrive with the right support. I'm driven by a deep desire to make a positive, lasting impact and help create a world where everyone can reach their full potential. Outside of work, you'll find me exploring new technologies, discovering hidden gems in the city, and cherishing moments with my friends and family."
         },
         {
