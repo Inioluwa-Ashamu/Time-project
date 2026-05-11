@@ -653,7 +653,7 @@ h3 {
     position: absolute;
     top: 1.25rem;
     bottom: 1.25rem;
-    left: 48px;
+    left: 126px;
     width: 2px;
     background: linear-gradient(180deg, rgba(47, 107, 71, 0.18), rgba(215, 191, 68, 0.55));
 }
@@ -661,8 +661,8 @@ h3 {
 .practice-notes article {
     position: relative;
     display: grid;
-    grid-template-columns: 96px minmax(0, 1fr);
-    gap: 1rem;
+    grid-template-columns: 92px 48px minmax(0, 1fr);
+    gap: 0.8rem;
     align-items: start;
     padding: 1.1rem;
     border: 1px solid rgba(21, 58, 40, 0.1);
@@ -676,7 +676,7 @@ h3 {
     content: "";
     position: absolute;
     top: 1.35rem;
-    left: 40px;
+    left: 118px;
     width: 18px;
     height: 18px;
     border: 3px solid var(--surface-solid);
@@ -693,10 +693,12 @@ h3 {
 }
 
 .practice-notes strong {
+    grid-column: 1;
     color: var(--brand-deep);
 }
 
 .practice-notes span {
+    grid-column: 3;
     color: var(--muted);
 }
 
