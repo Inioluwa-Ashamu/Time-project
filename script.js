@@ -360,3 +360,105 @@ const initTeamDirectory = async () => {
 };
 
 initTeamDirectory();
+
+const initSupportWorkerHub = () => {
+    const lockSection = document.querySelector("#support-worker-lock");
+    const contentSection = document.querySelector("#support-worker-content");
+    const loginForm = document.querySelector("#support-worker-login");
+    const passwordInput = document.querySelector("#support-worker-password");
+    const errorMessage = document.querySelector("#support-worker-password-error");
+    const lockButton = document.querySelector("#support-worker-lock-button");
+    const resourceSearch = document.querySelector("#support-resource-search");
+    const emptyState = document.querySelector("#support-resource-empty");
+    const resourceCards = Array.from(document.querySelectorAll("[data-resource-card]"));
+
+    if (!lockSection || !contentSection || !loginForm || !passwordInput) {
+        return;
+    }
+
+    const passwordHash = "b03ae420e342195770900e49fd6ff0f2f3d266b631075c7dc57c87782625a3c3";
+    const storageKey = "tssSupportWorkerHubUnlocked";
+
+    const hashPassword = async (value) => {
+        const encodedValue = new TextEncoder().encode(value);
+        const digest = await crypto.subtle.digest("SHA-256", encodedValue);
+        return Array.from(new Uint8Array(digest))
+            .map((byte) => byte.toString(16).padStart(2, "0"))
+            .join("");
+    };
+
+    const unlockHub = () => {
+        lockSection.hidden = true;
+        contentSection.hidden = false;
+        sessionStorage.setItem(storageKey, "true");
+
+        if (resourceSearch) {
+            resourceSearch.focus();
+        }
+    };
+
+    const lockHub = () => {
+        sessionStorage.removeItem(storageKey);
+        contentSection.hidden = true;
+        lockSection.hidden = false;
+        passwordInput.value = "";
+        passwordInput.focus();
+    };
+
+    if (sessionStorage.getItem(storageKey) === "true") {
+        unlockHub();
+    }
+
+    loginForm.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        let enteredHash = "";
+
+        try {
+            enteredHash = await hashPassword(passwordInput.value);
+        } catch (error) {
+            enteredHash = "";
+        }
+
+        if (enteredHash === passwordHash) {
+            if (errorMessage) {
+                errorMessage.hidden = true;
+            }
+
+            unlockHub();
+            return;
+        }
+
+        if (errorMessage) {
+            errorMessage.hidden = false;
+        }
+
+        passwordInput.select();
+    });
+
+    if (lockButton) {
+        lockButton.addEventListener("click", lockHub);
+    }
+
+    if (resourceSearch) {
+        resourceSearch.addEventListener("input", (event) => {
+            const searchTerm = event.target.value.trim().toLowerCase();
+            let visibleCount = 0;
+
+            resourceCards.forEach((card) => {
+                const isMatch = !searchTerm || card.textContent.toLowerCase().includes(searchTerm);
+                card.hidden = !isMatch;
+
+                if (isMatch) {
+                    visibleCount += 1;
+                }
+            });
+
+            if (emptyState) {
+                emptyState.hidden = visibleCount !== 0;
+            }
+        });
+    }
+};
+
+initSupportWorkerHub();
