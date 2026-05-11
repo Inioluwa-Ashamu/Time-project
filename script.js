@@ -75,6 +75,47 @@ const handleScroll = () => {
 handleScroll();
 window.addEventListener("scroll", handleScroll, { passive: true });
 
+const initScrollReveals = () => {
+    const revealItems = document.querySelectorAll(
+        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
+    );
+
+    if (!revealItems.length) {
+        return;
+    }
+
+    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        revealItems.forEach((item) => item.classList.add("is-visible"));
+        return;
+    }
+
+    revealItems.forEach((item, index) => {
+        item.classList.add("reveal-item");
+        item.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 45}ms`);
+    });
+
+    const revealObserver = new IntersectionObserver(
+        (entries, observer) => {
+            entries.forEach((entry) => {
+                if (!entry.isIntersecting) {
+                    return;
+                }
+
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+            });
+        },
+        {
+            threshold: 0.12,
+            rootMargin: "0px 0px -8% 0px"
+        }
+    );
+
+    revealItems.forEach((item) => revealObserver.observe(item));
+};
+
+initScrollReveals();
+
 const escapeHtml = (value) =>
     String(value || "")
         .replaceAll("&", "&amp;")

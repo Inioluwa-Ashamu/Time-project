@@ -402,6 +402,10 @@ h3 {
     transform: translateY(-1px);
 }
 
+.button:active {
+    transform: translateY(0) scale(0.99);
+}
+
 .button-primary {
     background: linear-gradient(135deg, #2f6b47 0%, var(--brand-deep) 100%);
     color: #fff;
@@ -458,6 +462,31 @@ h3 {
     aspect-ratio: 1 / 1.08;
     object-fit: cover;
     border-radius: 18px;
+    transition: transform 0.45s ease, filter 0.45s ease;
+}
+
+.support-snapshot:hover .portrait-collage img {
+    filter: saturate(1.04);
+}
+
+.support-snapshot:hover .portrait-collage img:nth-child(1),
+.support-snapshot:focus-within .portrait-collage img:nth-child(1) {
+    transform: translate(-2px, -2px);
+}
+
+.support-snapshot:hover .portrait-collage img:nth-child(2),
+.support-snapshot:focus-within .portrait-collage img:nth-child(2) {
+    transform: translate(2px, -2px);
+}
+
+.support-snapshot:hover .portrait-collage img:nth-child(3),
+.support-snapshot:focus-within .portrait-collage img:nth-child(3) {
+    transform: translate(-2px, 2px);
+}
+
+.support-snapshot:hover .portrait-collage img:nth-child(4),
+.support-snapshot:focus-within .portrait-collage img:nth-child(4) {
+    transform: translate(2px, 2px);
 }
 
 .snapshot-copy {
@@ -614,11 +643,23 @@ h3 {
 }
 
 .practice-notes {
+    position: relative;
     display: grid;
     gap: 0.8rem;
 }
 
+.practice-notes::before {
+    content: "";
+    position: absolute;
+    top: 1.25rem;
+    bottom: 1.25rem;
+    left: 48px;
+    width: 2px;
+    background: linear-gradient(180deg, rgba(47, 107, 71, 0.18), rgba(215, 191, 68, 0.55));
+}
+
 .practice-notes article {
+    position: relative;
     display: grid;
     grid-template-columns: 96px minmax(0, 1fr);
     gap: 1rem;
@@ -628,6 +669,27 @@ h3 {
     border-radius: var(--radius-md);
     background: rgba(255, 255, 255, 0.72);
     box-shadow: var(--shadow-md);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+.practice-notes article::before {
+    content: "";
+    position: absolute;
+    top: 1.35rem;
+    left: 40px;
+    width: 18px;
+    height: 18px;
+    border: 3px solid var(--surface-solid);
+    border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 0 1px rgba(21, 58, 40, 0.14);
+}
+
+.practice-notes article:hover,
+.practice-notes article:focus-within {
+    transform: translateX(4px);
+    background: rgba(255, 255, 252, 0.92);
+    box-shadow: 0 14px 28px rgba(18, 43, 31, 0.08);
 }
 
 .practice-notes strong {
@@ -748,6 +810,21 @@ h3 {
 .timeline-card {
     position: relative;
     overflow: hidden;
+}
+
+.timeline-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(215, 191, 68, 0.13), transparent 46%);
+    opacity: 0;
+    transition: opacity 0.25s ease;
+    pointer-events: none;
+}
+
+.timeline-card:hover::after,
+.timeline-card:focus-within::after {
+    opacity: 1;
 }
 
 .timeline-step {
@@ -1024,6 +1101,18 @@ h3 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1.5rem;
     background: linear-gradient(140deg, rgba(255, 255, 249, 0.98), rgba(240, 244, 232, 0.96));
+}
+
+.reveal-item {
+    opacity: 0;
+    transform: translateY(18px);
+    transition: opacity 0.55s ease, transform 0.55s ease;
+    transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal-item.is-visible {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .avatar {
@@ -1478,6 +1567,12 @@ h3 {
     .practice-notes article {
         grid-template-columns: 1fr;
         gap: 0.35rem;
+        padding-left: 1.25rem;
+    }
+
+    .practice-notes::before,
+    .practice-notes article::before {
+        display: none;
     }
 
     .founder-image {
@@ -1510,5 +1605,31 @@ h3 {
 
     .hero-home .hero-copy {
         padding: 0;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html {
+        scroll-behavior: auto;
+    }
+
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.001ms !important;
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+    }
+
+    .reveal-item {
+        opacity: 1;
+        transform: none;
+    }
+
+    .support-snapshot:hover .portrait-collage img,
+    .support-snapshot:focus-within .portrait-collage img,
+    .practice-notes article:hover,
+    .practice-notes article:focus-within {
+        transform: none;
     }
 }
