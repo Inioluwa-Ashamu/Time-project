@@ -777,6 +777,26 @@ h3 {
     font-size: 0.95rem;
 }
 
+.application-panel {
+    align-items: center;
+}
+
+.application-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+    margin-top: 1.25rem;
+}
+
+.recruitment-video {
+    display: block;
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: var(--brand-deep);
+    box-shadow: var(--shadow-md);
+}
+
 .form-honey {
     display: none;
 }
