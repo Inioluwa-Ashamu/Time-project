@@ -99,8 +99,10 @@ select {
 }
 
 .site-header {
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
     z-index: 100;
     border-bottom: 1px solid rgba(24, 61, 44, 0.08);
     background: rgba(247, 250, 243, 0.88);
@@ -222,7 +224,7 @@ body.is-scrolled .site-header {
 
 .hero,
 .page-hero {
-    padding: 4.75rem 0 2.75rem;
+    padding: calc(4.75rem + 88px) 0 2.75rem;
 }
 
 .hero-grid,
@@ -1408,7 +1410,7 @@ h3 {
 
     .hero,
     .page-hero {
-        padding-top: 3rem;
+        padding-top: calc(3rem + 78px);
     }
 
     .hero-home .hero-copy {
