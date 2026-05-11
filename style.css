@@ -130,6 +130,11 @@ body.is-scrolled .site-header {
     flex-shrink: 0;
 }
 
+.brand-logo {
+    width: clamp(190px, 22vw, 260px);
+    height: auto;
+}
+
 .brand-mark {
     display: grid;
     place-items: center;
@@ -891,6 +896,10 @@ h3 {
 
 .footer-brand {
     margin-bottom: 1rem;
+}
+
+.footer-brand .brand-logo {
+    width: min(240px, 100%);
 }
 
 .site-footer {
