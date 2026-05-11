@@ -695,6 +695,10 @@ h3 {
     margin-top: 1rem;
 }
 
+.section-intro .button {
+    margin-top: 1.25rem;
+}
+
 .three-up,
 .timeline-grid,
 .profile-grid,
