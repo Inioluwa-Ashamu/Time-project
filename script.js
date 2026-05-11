@@ -130,7 +130,7 @@ const initContactHelper = () => {
         support: {
             type: "Support enquiry",
             message:
-                "I am looking for support for a young person. It would be helpful to talk about their interests, routine, communication, sensory needs, and the kind of support that might help family life feel more manageable."
+                "I am looking for support for a young person. It would be helpful to talk about their interests, routine, communication, sensory needs, and what would make family life feel steadier."
         },
         referral: {
             type: "Referral or professional enquiry",
