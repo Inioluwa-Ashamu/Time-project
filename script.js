@@ -187,6 +187,10 @@ const renderTeamCard = (member, variant = "support") => {
     const imageMarkup = member.image_url
         ? `<img class="staff-photo" src="${escapeHtml(member.image_url)}" alt="${escapeHtml(member.name)}">`
         : "";
+    const actionMarkup =
+        variant === "support"
+            ? `<button class="text-link profile-toggle" type="button" aria-expanded="false">Read full profile</button>`
+            : "";
 
     return `
         <article class="${cardClass}">
@@ -199,7 +203,8 @@ const renderTeamCard = (member, variant = "support") => {
                     <h3 class="staff-name">${escapeHtml(member.name)}</h3>
                     <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
                 </div>
-                <p>${escapeHtml(member.bio)}</p>
+                <p class="staff-bio">${escapeHtml(member.bio)}</p>
+                ${actionMarkup}
             </div>
         </article>
     `;
@@ -223,10 +228,16 @@ const initTeamDirectory = async () => {
     const supportSearch = document.querySelector("#support-worker-search");
     const supportCount = document.querySelector("#support-worker-count");
     const supportEmptyState = document.querySelector("#support-empty-state");
+    const supportLoadMore = document.querySelector("#support-worker-load-more");
+    const supportReset = document.querySelector("#support-worker-reset");
 
     if (!officeDirectory || !supportDirectory) {
         return;
     }
+
+    const initialSupportCount = 12;
+    const supportBatchSize = 12;
+    let visibleSupportCount = initialSupportCount;
 
     const config = window.teamDirectoryConfig || {};
     let teamMembers = Array.isArray(config.fallback) ? config.fallback.slice() : [];
@@ -280,17 +291,32 @@ const initTeamDirectory = async () => {
                 .toLowerCase()
                 .includes(searchTerm);
         });
+        const shouldLimitResults = !searchTerm;
+        const visibleMembers = shouldLimitResults
+            ? filteredMembers.slice(0, visibleSupportCount)
+            : filteredMembers;
 
-        supportDirectory.innerHTML = filteredMembers.map((member) => renderTeamCard(member)).join("");
+        supportDirectory.innerHTML = visibleMembers.map((member) => renderTeamCard(member)).join("");
         attachImageFallbacks();
 
         if (supportCount) {
             const noun = filteredMembers.length === 1 ? "profile" : "profiles";
-            supportCount.textContent = `${filteredMembers.length} support worker ${noun} shown`;
+            supportCount.textContent = shouldLimitResults && filteredMembers.length > visibleMembers.length
+                ? `${visibleMembers.length} of ${filteredMembers.length} support worker ${noun} shown`
+                : `${filteredMembers.length} support worker ${noun} shown`;
         }
 
         if (supportEmptyState) {
             supportEmptyState.hidden = filteredMembers.length !== 0;
+        }
+
+        if (supportLoadMore) {
+            supportLoadMore.hidden = !shouldLimitResults || visibleMembers.length >= filteredMembers.length;
+            supportLoadMore.textContent = `Show ${Math.min(supportBatchSize, filteredMembers.length - visibleMembers.length)} more profiles`;
+        }
+
+        if (supportReset) {
+            supportReset.hidden = !searchTerm;
         }
     };
 
@@ -298,9 +324,38 @@ const initTeamDirectory = async () => {
 
     if (supportSearch) {
         supportSearch.addEventListener("input", (event) => {
+            visibleSupportCount = initialSupportCount;
             renderSupportMembers(event.target.value);
         });
     }
+
+    if (supportLoadMore) {
+        supportLoadMore.addEventListener("click", () => {
+            visibleSupportCount += supportBatchSize;
+            renderSupportMembers(supportSearch ? supportSearch.value : "");
+        });
+    }
+
+    if (supportReset && supportSearch) {
+        supportReset.addEventListener("click", () => {
+            supportSearch.value = "";
+            visibleSupportCount = initialSupportCount;
+            renderSupportMembers();
+            supportSearch.focus();
+        });
+    }
+
+    supportDirectory.addEventListener("click", (event) => {
+        const toggle = event.target.closest(".profile-toggle");
+        if (!toggle) {
+            return;
+        }
+
+        const card = toggle.closest(".support-card");
+        const isExpanded = card.classList.toggle("is-expanded");
+        toggle.setAttribute("aria-expanded", String(isExpanded));
+        toggle.textContent = isExpanded ? "Show less" : "Read full profile";
+    });
 
 };
 
