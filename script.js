@@ -122,32 +122,66 @@ const initContactHelper = () => {
     const messageField = document.querySelector("#contact-message");
     const status = document.querySelector("#contact-helper-status");
 
-    if (!helperButtons.length || !messageField) {
+    if (!messageField) {
         return;
     }
 
+    const templates = {
+        support: {
+            type: "Support enquiry",
+            message:
+                "I am looking for support for a young person. It would be helpful to talk about their interests, routine, communication, sensory needs, and the kind of support that might help family life feel more manageable."
+        },
+        referral: {
+            type: "Referral or professional enquiry",
+            message:
+                "I am contacting you as a professional. I would like to discuss whether Time Specialist Support may be suitable for a young person or family I am working with."
+        },
+        recruitment: {
+            type: "Recruitment",
+            message:
+                "I am interested in support worker opportunities and would like to ask about current recruitment, availability, and the application process."
+        },
+        feedback: {
+            type: "Feedback or complaint",
+            message:
+                "I would like to share feedback or raise a concern. Please let me know the next step and who will be handling this."
+        }
+    };
+
+    const applyTemplate = ({ type, message }, shouldFocus = true) => {
+        if (enquiryType && type) {
+            enquiryType.value = type;
+        }
+
+        if (!messageField.value.trim()) {
+            messageField.value = message;
+        } else if (!messageField.value.includes(message)) {
+            messageField.value = `${messageField.value.trim()}\n\n${message}`;
+        }
+
+        if (status) {
+            status.textContent = "A suggested message has been added. You can edit it before sending.";
+        }
+
+        if (shouldFocus) {
+            messageField.focus();
+        }
+    };
+
     helperButtons.forEach((button) => {
         button.addEventListener("click", () => {
-            const template = button.dataset.template || "";
-            const templateType = button.dataset.enquiryType || "";
-
-            if (enquiryType && templateType) {
-                enquiryType.value = templateType;
-            }
-
-            if (!messageField.value.trim()) {
-                messageField.value = template;
-            } else if (!messageField.value.includes(template)) {
-                messageField.value = `${messageField.value.trim()}\n\n${template}`;
-            }
-
-            if (status) {
-                status.textContent = "A suggested message has been added. You can edit it before sending.";
-            }
-
-            messageField.focus();
+            applyTemplate({
+                type: button.dataset.enquiryType || "",
+                message: button.dataset.template || ""
+            });
         });
     });
+
+    const topic = new URLSearchParams(window.location.search).get("topic");
+    if (topic && templates[topic]) {
+        applyTemplate(templates[topic], false);
+    }
 };
 
 initContactHelper();
