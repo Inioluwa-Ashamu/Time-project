@@ -132,7 +132,7 @@ body.is-scrolled .site-header {
 }
 
 .brand-logo {
-    width: clamp(190px, 22vw, 260px);
+    width: clamp(180px, 21vw, 250px);
     height: auto;
 }
 
@@ -215,6 +215,17 @@ body.is-scrolled .site-header {
 .site-nav a.is-current {
     background: rgba(47, 107, 71, 0.08);
     color: var(--brand-deep);
+}
+
+.site-nav a[data-page="contact"] {
+    background: rgba(215, 191, 68, 0.16);
+    color: var(--brand-deep);
+}
+
+.site-nav a[data-page="contact"]:hover,
+.site-nav a[data-page="contact"]:focus-visible,
+.site-nav a[data-page="contact"].is-current {
+    background: rgba(47, 107, 71, 0.12);
 }
 
 :focus-visible {
@@ -860,6 +871,59 @@ h3 {
     box-shadow: var(--shadow-lg);
 }
 
+.contact-helper {
+    display: grid;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background:
+        linear-gradient(160deg, rgba(255, 255, 252, 0.96), rgba(241, 245, 233, 0.92)),
+        linear-gradient(135deg, rgba(215, 191, 68, 0.12), transparent 60%);
+    box-shadow: var(--shadow-md);
+}
+
+.contact-helper h2 {
+    margin-top: 0.55rem;
+}
+
+.contact-helper p {
+    color: var(--muted);
+}
+
+.contact-helper .contact-label {
+    color: var(--accent-deep);
+}
+
+.info-card .section-tag {
+    color: var(--accent-deep);
+}
+
+.helper-options {
+    display: grid;
+    gap: 0.7rem;
+}
+
+.helper-option {
+    min-height: 48px;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid rgba(21, 58, 40, 0.12);
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.78);
+    color: var(--brand-deep);
+    font-weight: 800;
+    text-align: left;
+    cursor: pointer;
+    transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.helper-option:hover,
+.helper-option:focus-visible {
+    transform: translateY(-1px);
+    background: #fff;
+    box-shadow: var(--shadow-md);
+}
+
 .contact-form h2 {
     margin-top: 0.55rem;
 }
@@ -949,6 +1013,10 @@ h3 {
 
 .form-honey {
     display: none;
+}
+
+.guide-section {
+    scroll-margin-top: 120px;
 }
 
 .password-panel {
@@ -1371,7 +1439,7 @@ h3 {
     }
 }
 
-@media (max-width: 900px) {
+@media (max-width: 1100px) {
     .site-header::after {
         content: "";
         position: fixed;
@@ -1512,6 +1580,7 @@ h3 {
     .profile-card,
     .resource-card,
     .contact-card,
+    .contact-helper,
     .split-panel,
     .contact-form,
     .password-panel,

@@ -6,7 +6,7 @@
     <title>Contact us | Time Specialist Support</title>
     <meta
         name="description"
-        content="Get in touch with Time Specialist Support for general enquiries, referrals, recruitment questions, and feedback."
+        content="Contact Time Specialist Support for autism support enquiries, professional referrals, recruitment questions, feedback, and complaints."
     >
     <meta name="theme-color" content="#f7f8f3">
     <link rel="icon" href="favicon.png" type="image/png">
@@ -29,7 +29,8 @@
                         <li><a href="services.html" data-page="services">What we do</a></li>
                         <li><a href="team.html" data-page="team">Meet the team</a></li>
                         <li><a href="careers.html" data-page="careers">Work for us</a></li>
-                        <li><a href="resources.html" data-page="resources">Further links</a></li>
+                        <li><a href="faq.html" data-page="faq">FAQs</a></li>
+                        <li><a href="resources.html" data-page="resources">Resources</a></li>
                         <li><a href="contact.html" data-page="contact">Contact us</a></li>
                     </ul>
                 </nav>
@@ -57,6 +58,12 @@
                     >
                         <input type="hidden" name="_subject" value="New website enquiry">
                         <input type="hidden" name="_template" value="table">
+                        <input type="hidden" name="_next" value="https://timespecialist.support/thank-you.html">
+                        <input
+                            type="hidden"
+                            name="_autoresponse"
+                            value="Thank you for contacting Time Specialist Support. We have received your message and the team will review it as soon as possible. Please do not use this inbox for urgent safeguarding concerns or emergencies."
+                        >
                         <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="form-honey">
 
                         <div>
@@ -95,14 +102,39 @@
                             </label>
                         </div>
 
-                        <label class="form-field" for="contact-preference">
-                            <span>Preferred contact route</span>
-                            <select id="contact-preference" name="preferred_contact_route">
-                                <option>Email</option>
-                                <option>Phone</option>
-                                <option>No preference</option>
-                            </select>
-                        </label>
+                        <div class="form-grid">
+                            <label class="form-field" for="contact-area">
+                                <span>Area</span>
+                                <input
+                                    id="contact-area"
+                                    name="area"
+                                    type="text"
+                                    placeholder="Manchester, Salford, Stockport..."
+                                    autocomplete="address-level2"
+                                >
+                            </label>
+
+                            <label class="form-field" for="contact-age">
+                                <span>Young person's age (optional)</span>
+                                <input id="contact-age" name="young_person_age" type="text" inputmode="numeric">
+                            </label>
+                        </div>
+
+                        <div class="form-grid">
+                            <label class="form-field" for="contact-preference">
+                                <span>Preferred contact route</span>
+                                <select id="contact-preference" name="preferred_contact_route">
+                                    <option>Email</option>
+                                    <option>Phone</option>
+                                    <option>No preference</option>
+                                </select>
+                            </label>
+
+                            <label class="form-field" for="contact-time">
+                                <span>Best time to contact</span>
+                                <input id="contact-time" name="best_time_to_contact" type="text" placeholder="For example, weekday mornings">
+                            </label>
+                        </div>
 
                         <label class="form-field" for="contact-message">
                             <span>Message</span>
@@ -121,13 +153,57 @@
                         </label>
 
                         <p class="form-note">
-                            Please do not use this form for urgent safeguarding concerns or emergencies.
+                            Please only include information needed for this enquiry. Do not use this form for urgent
+                            safeguarding concerns or emergencies.
                         </p>
 
                         <button class="button button-primary" type="submit">Send message</button>
                     </form>
 
                     <div class="contact-panel">
+                        <div class="contact-helper" aria-labelledby="contact-helper-heading">
+                            <p class="contact-label">Guided enquiry</p>
+                            <h2 id="contact-helper-heading">Not sure what to write?</h2>
+                            <p>
+                                Choose a starting point and the form will add a simple message you can edit.
+                            </p>
+                            <div class="helper-options">
+                                <button
+                                    class="helper-option"
+                                    type="button"
+                                    data-enquiry-type="Support enquiry"
+                                    data-template="I am looking for support for a young person. It would be helpful to talk about their interests, routine, communication, sensory needs, and the kind of support that might help family life feel more manageable."
+                                >
+                                    Family support enquiry
+                                </button>
+                                <button
+                                    class="helper-option"
+                                    type="button"
+                                    data-enquiry-type="Referral or professional enquiry"
+                                    data-template="I am contacting you as a professional. I would like to discuss whether Time Specialist Support may be suitable for a young person or family I am working with."
+                                >
+                                    Professional referral
+                                </button>
+                                <button
+                                    class="helper-option"
+                                    type="button"
+                                    data-enquiry-type="Recruitment"
+                                    data-template="I am interested in support worker opportunities and would like to ask about current recruitment, availability, and the application process."
+                                >
+                                    Recruitment question
+                                </button>
+                                <button
+                                    class="helper-option"
+                                    type="button"
+                                    data-enquiry-type="Feedback or complaint"
+                                    data-template="I would like to share feedback or raise a concern. Please let me know the next step and who will be handling this."
+                                >
+                                    Feedback or complaint
+                                </button>
+                            </div>
+                            <p class="form-note" id="contact-helper-status" aria-live="polite"></p>
+                        </div>
+
                         <div class="contact-card">
                             <p class="contact-label">Contact details</p>
                             <h2>Other ways to reach us</h2>

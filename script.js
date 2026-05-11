@@ -3,7 +3,7 @@ const siteNav = document.querySelector(".site-nav");
 const currentPage = document.body.dataset.page;
 
 if (navToggle && siteNav) {
-    const mobileNav = window.matchMedia("(max-width: 900px)");
+    const mobileNav = window.matchMedia("(max-width: 1100px)");
 
     const closeNav = () => {
         siteNav.classList.remove("is-open");
@@ -77,7 +77,7 @@ window.addEventListener("scroll", handleScroll, { passive: true });
 
 const initScrollReveals = () => {
     const revealItems = document.querySelectorAll(
-        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
+        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .contact-helper, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
     );
 
     if (!revealItems.length) {
@@ -115,6 +115,42 @@ const initScrollReveals = () => {
 };
 
 initScrollReveals();
+
+const initContactHelper = () => {
+    const helperButtons = document.querySelectorAll(".helper-option[data-template]");
+    const enquiryType = document.querySelector("#contact-type");
+    const messageField = document.querySelector("#contact-message");
+    const status = document.querySelector("#contact-helper-status");
+
+    if (!helperButtons.length || !messageField) {
+        return;
+    }
+
+    helperButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            const template = button.dataset.template || "";
+            const templateType = button.dataset.enquiryType || "";
+
+            if (enquiryType && templateType) {
+                enquiryType.value = templateType;
+            }
+
+            if (!messageField.value.trim()) {
+                messageField.value = template;
+            } else if (!messageField.value.includes(template)) {
+                messageField.value = `${messageField.value.trim()}\n\n${template}`;
+            }
+
+            if (status) {
+                status.textContent = "A suggested message has been added. You can edit it before sending.";
+            }
+
+            messageField.focus();
+        });
+    });
+};
+
+initContactHelper();
 
 const escapeHtml = (value) =>
     String(value || "")
