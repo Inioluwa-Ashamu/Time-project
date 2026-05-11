@@ -36,8 +36,7 @@ html {
 body {
     min-height: 100vh;
     background:
-        radial-gradient(circle at top left, rgba(47, 107, 71, 0.12), transparent 32%),
-        radial-gradient(circle at 85% 5%, rgba(215, 191, 68, 0.18), transparent 22%),
+        linear-gradient(140deg, rgba(47, 107, 71, 0.08) 0%, transparent 34%),
         linear-gradient(180deg, #f4f7ef 0%, #f8faf5 52%, #fcfcf9 100%);
     color: var(--text);
     font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", sans-serif;
@@ -262,19 +261,10 @@ body.is-scrolled .site-header {
 }
 
 .hero-home .hero-copy {
-    position: relative;
-    overflow: hidden;
-}
-
-.hero-home .hero-copy::after {
-    content: "";
-    position: absolute;
-    inset: auto -8% -20% auto;
-    width: 220px;
-    height: 220px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(215, 191, 68, 0.16), transparent 70%);
-    pointer-events: none;
+    padding-left: 0;
+    border: 0;
+    background: transparent;
+    box-shadow: none;
 }
 
 .eyebrow,
@@ -445,6 +435,38 @@ h3 {
     gap: 1rem;
 }
 
+.support-snapshot {
+    align-self: stretch;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: rgba(255, 255, 252, 0.9);
+    box-shadow: var(--shadow-lg);
+}
+
+.portrait-collage {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.45rem;
+    padding: 0.45rem;
+}
+
+.portrait-collage img {
+    width: 100%;
+    aspect-ratio: 1 / 1.08;
+    object-fit: cover;
+    border-radius: 18px;
+}
+
+.snapshot-copy {
+    padding: 1.45rem;
+}
+
+.snapshot-copy p {
+    margin-top: 0.8rem;
+    color: var(--muted);
+}
+
 .glass-card {
     padding: 2rem;
     border-radius: var(--radius-xl);
@@ -517,7 +539,7 @@ h3 {
 
 .section-dark {
     background:
-        radial-gradient(circle at top right, rgba(215, 191, 68, 0.14), transparent 28%),
+        linear-gradient(135deg, rgba(215, 191, 68, 0.1), transparent 42%),
         linear-gradient(180deg, #153325 0%, #10281d 100%);
     color: #f5f8f2;
 }
@@ -545,6 +567,73 @@ h3 {
     grid-template-columns: minmax(260px, 0.9fr) minmax(0, 1.1fr);
     gap: 1.5rem;
     align-items: start;
+}
+
+.founder-profile,
+.practice-strip {
+    display: grid;
+    grid-template-columns: minmax(280px, 0.75fr) minmax(0, 1.25fr);
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+.founder-image-wrap {
+    min-height: 100%;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: var(--surface-soft);
+    box-shadow: var(--shadow-lg);
+}
+
+.founder-image {
+    width: 100%;
+    height: 100%;
+    min-height: 420px;
+    object-fit: cover;
+}
+
+.founder-copy,
+.practice-copy {
+    padding: 2rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    background: rgba(255, 255, 252, 0.9);
+    box-shadow: var(--shadow-md);
+}
+
+.founder-copy p + p {
+    margin-top: 1rem;
+}
+
+.practice-strip {
+    grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
+    align-items: center;
+}
+
+.practice-notes {
+    display: grid;
+    gap: 0.8rem;
+}
+
+.practice-notes article {
+    display: grid;
+    grid-template-columns: 96px minmax(0, 1fr);
+    gap: 1rem;
+    align-items: start;
+    padding: 1.1rem;
+    border: 1px solid rgba(21, 58, 40, 0.1);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.72);
+    box-shadow: var(--shadow-md);
+}
+
+.practice-notes strong {
+    color: var(--brand-deep);
+}
+
+.practice-notes span {
+    color: var(--muted);
 }
 
 .section-heading {
@@ -984,7 +1073,7 @@ h3 {
     overflow: hidden;
     border-radius: calc(var(--radius-lg) - 4px);
     background:
-        radial-gradient(circle at top, rgba(215, 191, 68, 0.18), transparent 42%),
+        linear-gradient(135deg, rgba(215, 191, 68, 0.16), transparent 48%),
         linear-gradient(180deg, rgba(226, 234, 216, 0.94), rgba(246, 248, 241, 0.96));
     aspect-ratio: 4 / 3;
 }
@@ -1265,6 +1354,8 @@ h3 {
 
     .hero-grid,
     .feature-layout,
+    .founder-profile,
+    .practice-strip,
     .founder-note,
     .two-column,
     .contact-layout,
@@ -1319,6 +1410,14 @@ h3 {
     .page-hero {
         padding-top: 3rem;
     }
+
+    .hero-home .hero-copy {
+        padding-right: 0;
+    }
+
+    .founder-image {
+        min-height: 340px;
+    }
 }
 
 @media (max-width: 640px) {
@@ -1332,6 +1431,8 @@ h3 {
 
     .hero-copy,
     .glass-card,
+    .founder-copy,
+    .practice-copy,
     .info-card,
     .mini-card,
     .timeline-card,
@@ -1359,6 +1460,28 @@ h3 {
         padding: 0;
     }
 
+    .portrait-collage {
+        gap: 0.35rem;
+        padding: 0.35rem;
+    }
+
+    .portrait-collage img {
+        border-radius: 14px;
+    }
+
+    .snapshot-copy {
+        padding: 1.25rem;
+    }
+
+    .practice-notes article {
+        grid-template-columns: 1fr;
+        gap: 0.35rem;
+    }
+
+    .founder-image {
+        min-height: 300px;
+    }
+
     h1 {
         font-size: clamp(2.25rem, 11vw, 3.4rem);
     }
@@ -1381,5 +1504,9 @@ h3 {
         left: 0.625rem;
         right: 0.625rem;
         max-height: calc(100svh - 96px);
+    }
+
+    .hero-home .hero-copy {
+        padding: 0;
     }
 }
