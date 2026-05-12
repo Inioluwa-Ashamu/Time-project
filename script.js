@@ -186,6 +186,15 @@ const initEnquiryAssistant = () => {
             ]
         },
         {
+            label: "Staff resources",
+            title: "Looking for worker forms or policies?",
+            text: "The Support Worker Hub contains forms, safeguarding documents, policies, training links, and session resources. It is password protected for current workers.",
+            links: [
+                { label: "Open Support Worker Hub", href: "support-workers.html" },
+                { label: "Useful links", href: "resources.html" }
+            ]
+        },
+        {
             label: "Feedback",
             title: "Need to share feedback or a complaint?",
             text: "Use the contact form or phone/email the office. If your concern involves management, you can contact Tori directly.",

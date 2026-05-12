@@ -1038,6 +1038,11 @@ h3 {
     font-size: 0.95rem;
 }
 
+.privacy-note a {
+    color: var(--brand-deep);
+    font-weight: 800;
+}
+
 .application-panel {
     align-items: center;
 }
