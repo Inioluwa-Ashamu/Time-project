@@ -172,6 +172,21 @@ const initScrollControls = () => {
 
 initScrollControls();
 
+const initExternalLinkLabels = () => {
+    document.querySelectorAll('a[target="_blank"]').forEach((link) => {
+        if (link.querySelector(".sr-only")) {
+            return;
+        }
+
+        const hiddenLabel = document.createElement("span");
+        hiddenLabel.className = "sr-only";
+        hiddenLabel.textContent = " (opens in a new tab)";
+        link.append(hiddenLabel);
+    });
+};
+
+initExternalLinkLabels();
+
 const initContactHelper = () => {
     const helperButtons = document.querySelectorAll(".helper-option[data-template]");
     const enquiryType = document.querySelector("#contact-type");
@@ -226,9 +241,16 @@ const initContactHelper = () => {
     };
 
     helperButtons.forEach((button) => {
+        button.setAttribute("aria-pressed", "false");
+
         button.addEventListener("click", () => {
-            helperButtons.forEach((option) => option.classList.remove("is-selected"));
+            helperButtons.forEach((option) => {
+                option.classList.remove("is-selected");
+                option.setAttribute("aria-pressed", "false");
+            });
+
             button.classList.add("is-selected");
+            button.setAttribute("aria-pressed", "true");
 
             applyTemplate({
                 type: button.dataset.enquiryType || "",
@@ -244,6 +266,7 @@ const initContactHelper = () => {
         const matchingButton = Array.from(helperButtons).find((button) => button.dataset.enquiryType === templates[topic].type);
         if (matchingButton) {
             matchingButton.classList.add("is-selected");
+            matchingButton.setAttribute("aria-pressed", "true");
         }
     }
 };
@@ -259,6 +282,7 @@ const initFormSubmissionFeedback = () => {
                 return;
             }
 
+            form.setAttribute("aria-busy", "true");
             submitButton.disabled = true;
             submitButton.dataset.originalText = submitButton.textContent;
             submitButton.textContent = "Sending...";
@@ -382,7 +406,7 @@ const renderTeamCard = (member, variant = "support") => {
         : "";
     const actionMarkup =
         variant === "support"
-            ? `<button class="text-link profile-toggle" type="button" aria-expanded="false">Read full profile</button>`
+            ? `<button class="text-link profile-toggle" type="button" aria-expanded="false" aria-label="Read full profile for ${escapeHtml(member.name)}" data-profile-name="${escapeHtml(member.name)}">Read full profile</button>`
             : "";
 
     return `
@@ -548,7 +572,10 @@ const initTeamDirectory = async () => {
 
         const card = toggle.closest(".support-card");
         const isExpanded = card.classList.toggle("is-expanded");
+        const profileName = toggle.dataset.profileName || "this support worker";
+
         toggle.setAttribute("aria-expanded", String(isExpanded));
+        toggle.setAttribute("aria-label", isExpanded ? `Show less of profile for ${profileName}` : `Read full profile for ${profileName}`);
         toggle.textContent = isExpanded ? "Show less" : "Read full profile";
     });
 
@@ -585,6 +612,7 @@ const initSupportWorkerHub = () => {
     const unlockHub = () => {
         lockSection.hidden = true;
         contentSection.hidden = false;
+        passwordInput.removeAttribute("aria-invalid");
         sessionStorage.setItem(storageKey, "true");
 
         if (resourceSearch) {
@@ -597,6 +625,7 @@ const initSupportWorkerHub = () => {
         contentSection.hidden = true;
         lockSection.hidden = false;
         passwordInput.value = "";
+        passwordInput.removeAttribute("aria-invalid");
         passwordInput.focus();
     };
 
@@ -620,6 +649,7 @@ const initSupportWorkerHub = () => {
                 errorMessage.hidden = true;
             }
 
+            passwordInput.removeAttribute("aria-invalid");
             unlockHub();
             return;
         }
@@ -628,6 +658,7 @@ const initSupportWorkerHub = () => {
             errorMessage.hidden = false;
         }
 
+        passwordInput.setAttribute("aria-invalid", "true");
         passwordInput.select();
     });
 

@@ -56,6 +56,7 @@
                         id="contact-form"
                         action="https://formsubmit.co/info@time-specialist-support.com"
                         method="POST"
+                        aria-describedby="contact-form-help contact-emergency-note"
                     >
                         <input type="hidden" name="_subject" value="New website enquiry">
                         <input type="hidden" name="_template" value="table">
@@ -65,12 +66,12 @@
                             name="_autoresponse"
                             value="Thank you for contacting Time Specialist Support. We have received your message and the team will review it as soon as possible. This inbox is not monitored for emergencies. If someone is in immediate danger, call 999 or contact the relevant safeguarding service."
                         >
-                        <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="form-honey">
+                        <input type="text" name="_honey" tabindex="-1" autocomplete="off" class="form-honey" aria-hidden="true">
 
                         <div>
                             <p class="contact-label">Send a message</p>
                             <h2>Tell us what you need help with.</h2>
-                            <p class="form-note">
+                            <p class="form-note" id="contact-form-help">
                                 Required fields are name, email, enquiry type, message, and consent. The other
                                 details are optional, but they can help us reply usefully.
                             </p>
@@ -157,7 +158,7 @@
                             <span>I am happy for Time Specialist Support to contact me about this enquiry.</span>
                         </label>
 
-                        <p class="form-note">
+                        <p class="form-note" id="contact-emergency-note">
                             This form is not monitored for emergencies. If someone is in immediate danger, call 999
                             or contact the relevant safeguarding service.
                         </p>

@@ -84,11 +84,12 @@
                                 name="support-worker-search"
                                 placeholder="Search support workers"
                                 autocomplete="off"
+                                aria-describedby="support-worker-count"
                             >
                         </label>
 
                         <div class="directory-toolbar">
-                            <p class="search-meta" id="support-worker-count">Loading support-worker profiles...</p>
+                            <p class="search-meta" id="support-worker-count" role="status" aria-live="polite" aria-atomic="true">Loading support-worker profiles...</p>
                             <button class="button button-secondary directory-reset" id="support-worker-reset" type="button" hidden>
                                 Clear search
                             </button>
@@ -96,7 +97,7 @@
                     </div>
 
                     <div class="support-directory" id="support-directory" aria-live="polite"></div>
-                    <p class="empty-state" id="support-empty-state" hidden>No support workers match that search yet.</p>
+                    <p class="empty-state" id="support-empty-state" role="status" hidden>No support workers match that search yet.</p>
                     <div class="directory-actions">
                         <button class="button button-primary" id="support-worker-load-more" type="button" hidden>
                             Show more profiles

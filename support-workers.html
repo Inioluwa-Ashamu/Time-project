@@ -51,19 +51,25 @@
 
             <section class="section" id="support-worker-lock">
                 <div class="container">
-                    <form class="password-panel" id="support-worker-login">
+                    <form class="password-panel" id="support-worker-login" aria-describedby="support-worker-password-help support-worker-password-error">
                         <div>
                             <p class="section-tag">Password required</p>
                             <h2>Enter the support worker password.</h2>
-                            <p class="section-intro">
+                            <p class="section-intro" id="support-worker-password-help">
                                 This area is intended for Time Specialist Support workers and authorised team members.
                             </p>
                         </div>
                         <label class="form-field" for="support-worker-password">
                             <span>Password</span>
-                            <input id="support-worker-password" type="password" autocomplete="current-password" required>
+                            <input
+                                id="support-worker-password"
+                                type="password"
+                                autocomplete="current-password"
+                                aria-describedby="support-worker-password-help support-worker-password-error"
+                                required
+                            >
                         </label>
-                        <p class="form-error" id="support-worker-password-error" hidden>That password did not work. Please try again.</p>
+                        <p class="form-error" id="support-worker-password-error" role="alert" hidden>That password did not work. Please try again.</p>
                         <button class="button button-primary" type="submit">Unlock hub</button>
                     </form>
                 </div>
@@ -237,7 +243,7 @@
                             </div>
                         </article>
 
-                        <p class="empty-state" id="support-resource-empty" hidden>No resources match that search.</p>
+                        <p class="empty-state" id="support-resource-empty" role="status" hidden>No resources match that search.</p>
                     </div>
                 </section>
             </div>
