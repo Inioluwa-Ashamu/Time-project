@@ -7,10 +7,17 @@ const outputDir = path.join(process.cwd(), "screenshots", "mobile");
 
 const pages = [
     "index.html",
+    "about.html",
     "services.html",
+    "careers.html",
+    "faq.html",
+    "resources.html",
     "contact.html",
     "team.html",
-    "support-workers.html"
+    "support-workers.html",
+    "privacy.html",
+    "thank-you.html",
+    "404.html"
 ];
 
 const viewports = [
@@ -21,6 +28,29 @@ const viewports = [
 
 const waitForPage = async (page) => {
     await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {});
+    await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
+};
+
+const prepareFullPage = async (page) => {
+    await page.evaluate(async () => {
+        const delay = (milliseconds) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+        const viewportHeight = window.innerHeight || document.documentElement.clientHeight;
+        const pageHeight = Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight
+        );
+
+        for (let scrollTop = 0; scrollTop < pageHeight; scrollTop += Math.max(240, viewportHeight * 0.72)) {
+            window.scrollTo(0, scrollTop);
+            await delay(140);
+        }
+
+        window.scrollTo(0, pageHeight);
+        await delay(180);
+        window.scrollTo(0, 0);
+        await delay(180);
+    });
+
     await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
 };
 
@@ -42,6 +72,7 @@ const waitForPage = async (page) => {
             const url = `${baseUrl}/${pagePath}`;
             const response = await page.goto(url, { waitUntil: "domcontentloaded" });
             await waitForPage(page);
+            await prepareFullPage(page);
 
             const screenshotName = `${pagePath.replace(".html", "")}-${viewport.name}.png`;
             await page.screenshot({
