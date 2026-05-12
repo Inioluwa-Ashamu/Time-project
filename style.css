@@ -1857,6 +1857,10 @@ h3 {
         flex-direction: column;
     }
 
+    .hero-actions {
+        padding-right: 3.4rem;
+    }
+
     .button {
         width: 100%;
     }
@@ -1905,6 +1909,28 @@ h3 {
     .chat-launcher {
         min-height: 46px;
         padding: 0.7rem 0.95rem;
+    }
+}
+
+@media (max-width: 640px) {
+    .reveal-item {
+        opacity: 1;
+        transform: none;
+    }
+
+    .chat-launcher {
+        font-size: 0;
+        width: 48px;
+        min-width: 48px;
+        height: 48px;
+        min-height: 48px;
+        padding: 0;
+        border-radius: 50%;
+    }
+
+    .chat-launcher::after {
+        content: "?";
+        font-size: 1.25rem;
     }
 }
 
