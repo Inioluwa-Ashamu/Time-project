@@ -1,6 +1,9 @@
 const navToggle = document.querySelector(".nav-toggle");
 const siteNav = document.querySelector(".site-nav");
 const currentPage = document.body.dataset.page;
+const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+let revealObserver;
+let revealDelayIndex = 0;
 
 if (navToggle && siteNav) {
     const mobileNav = window.matchMedia("(max-width: 1100px)");
@@ -75,26 +78,12 @@ const handleScroll = () => {
 handleScroll();
 window.addEventListener("scroll", handleScroll, { passive: true });
 
-const initScrollReveals = () => {
-    const revealItems = document.querySelectorAll(
-        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .contact-helper, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
-    );
-
-    if (!revealItems.length) {
-        return;
+const createRevealObserver = () => {
+    if (revealObserver || !("IntersectionObserver" in window) || reducedMotionQuery.matches) {
+        return revealObserver;
     }
 
-    if (!("IntersectionObserver" in window) || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-        revealItems.forEach((item) => item.classList.add("is-visible"));
-        return;
-    }
-
-    revealItems.forEach((item, index) => {
-        item.classList.add("reveal-item");
-        item.style.setProperty("--reveal-delay", `${Math.min(index % 6, 5) * 45}ms`);
-    });
-
-    const revealObserver = new IntersectionObserver(
+    revealObserver = new IntersectionObserver(
         (entries, observer) => {
             entries.forEach((entry) => {
                 if (!entry.isIntersecting) {
@@ -111,10 +100,77 @@ const initScrollReveals = () => {
         }
     );
 
-    revealItems.forEach((item) => revealObserver.observe(item));
+    return revealObserver;
+};
+
+const queueRevealItems = (items) => {
+    const revealItems = Array.from(items).filter((item) => item && !item.classList.contains("reveal-item"));
+
+    if (!revealItems.length) {
+        return;
+    }
+
+    if (!("IntersectionObserver" in window) || reducedMotionQuery.matches) {
+        revealItems.forEach((item) => item.classList.add("is-visible"));
+        return;
+    }
+
+    const observer = createRevealObserver();
+
+    revealItems.forEach((item, index) => {
+        item.classList.add("reveal-item");
+        item.style.setProperty("--reveal-delay", `${Math.min((revealDelayIndex + index) % 6, 5) * 45}ms`);
+        observer.observe(item);
+    });
+
+    revealDelayIndex += revealItems.length;
+};
+
+const initScrollReveals = () => {
+    const revealItems = document.querySelectorAll(
+        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .contact-helper, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
+    );
+
+    queueRevealItems(revealItems);
 };
 
 initScrollReveals();
+
+const initScrollControls = () => {
+    const progress = document.createElement("div");
+    const backToTop = document.createElement("button");
+
+    progress.className = "scroll-progress";
+    progress.setAttribute("aria-hidden", "true");
+
+    backToTop.className = "back-to-top";
+    backToTop.type = "button";
+    backToTop.textContent = "Top";
+    backToTop.setAttribute("aria-label", "Back to top");
+
+    document.body.append(progress, backToTop);
+
+    const updateScrollControls = () => {
+        const scrollableHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const progressValue = scrollableHeight > 0 ? window.scrollY / scrollableHeight : 0;
+
+        progress.style.transform = `scaleX(${Math.min(Math.max(progressValue, 0), 1)})`;
+        backToTop.classList.toggle("is-visible", window.scrollY > 520);
+    };
+
+    backToTop.addEventListener("click", () => {
+        window.scrollTo({
+            top: 0,
+            behavior: reducedMotionQuery.matches ? "auto" : "smooth"
+        });
+    });
+
+    updateScrollControls();
+    window.addEventListener("scroll", updateScrollControls, { passive: true });
+    window.addEventListener("resize", updateScrollControls);
+};
+
+initScrollControls();
 
 const initContactHelper = () => {
     const helperButtons = document.querySelectorAll(".helper-option[data-template]");
@@ -171,6 +227,9 @@ const initContactHelper = () => {
 
     helperButtons.forEach((button) => {
         button.addEventListener("click", () => {
+            helperButtons.forEach((option) => option.classList.remove("is-selected"));
+            button.classList.add("is-selected");
+
             applyTemplate({
                 type: button.dataset.enquiryType || "",
                 message: button.dataset.template || ""
@@ -181,10 +240,33 @@ const initContactHelper = () => {
     const topic = new URLSearchParams(window.location.search).get("topic");
     if (topic && templates[topic]) {
         applyTemplate(templates[topic], false);
+
+        const matchingButton = Array.from(helperButtons).find((button) => button.dataset.enquiryType === templates[topic].type);
+        if (matchingButton) {
+            matchingButton.classList.add("is-selected");
+        }
     }
 };
 
 initContactHelper();
+
+const initFormSubmissionFeedback = () => {
+    document.querySelectorAll(".contact-form").forEach((form) => {
+        form.addEventListener("submit", () => {
+            const submitButton = form.querySelector('button[type="submit"]');
+
+            if (!submitButton) {
+                return;
+            }
+
+            submitButton.disabled = true;
+            submitButton.dataset.originalText = submitButton.textContent;
+            submitButton.textContent = "Sending...";
+        });
+    });
+};
+
+initFormSubmissionFeedback();
 
 const escapeHtml = (value) =>
     String(value || "")
@@ -389,6 +471,7 @@ const initTeamDirectory = async () => {
 
     officeDirectory.innerHTML = officeMembers.map((member) => renderTeamCard(member, "office")).join("");
     attachImageFallbacks();
+    queueRevealItems(officeDirectory.querySelectorAll(".office-card"));
 
     const renderSupportMembers = (query = "") => {
         const searchTerm = query.trim().toLowerCase();
@@ -409,6 +492,7 @@ const initTeamDirectory = async () => {
 
         supportDirectory.innerHTML = visibleMembers.map((member) => renderTeamCard(member)).join("");
         attachImageFallbacks();
+        queueRevealItems(supportDirectory.querySelectorAll(".support-card"));
 
         if (supportCount) {
             const noun = filteredMembers.length === 1 ? "profile" : "profiles";

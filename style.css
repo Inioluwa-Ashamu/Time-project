@@ -99,6 +99,53 @@ select {
     transform: translateY(0);
 }
 
+.scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 160;
+    height: 3px;
+    background: linear-gradient(90deg, var(--brand) 0%, var(--calm-blue) 50%, var(--accent) 100%);
+    transform: scaleX(0);
+    transform-origin: left center;
+    pointer-events: none;
+}
+
+.back-to-top {
+    position: fixed;
+    right: 1.1rem;
+    bottom: 1.1rem;
+    z-index: 90;
+    min-width: 56px;
+    min-height: 48px;
+    padding: 0.75rem 0.95rem;
+    border: 1px solid rgba(21, 58, 40, 0.14);
+    border-radius: 999px;
+    background: rgba(255, 255, 252, 0.92);
+    color: var(--brand-deep);
+    box-shadow: var(--shadow-md);
+    cursor: pointer;
+    font-weight: 800;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(12px);
+    transition: opacity 0.2s ease, transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.back-to-top.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.back-to-top:hover,
+.back-to-top:focus-visible {
+    background: #fff;
+    box-shadow: 0 14px 30px rgba(18, 43, 31, 0.12);
+    transform: translateY(-2px);
+}
+
 .site-header {
     position: fixed;
     top: 0;
@@ -169,6 +216,7 @@ body.is-scrolled .site-header {
 
 .nav-toggle {
     display: none;
+    position: relative;
     width: 52px;
     height: 52px;
     border: 1px solid var(--line);
@@ -189,6 +237,20 @@ body.is-scrolled .site-header {
     margin: 5px auto;
     background: var(--brand-deep);
     border-radius: 999px;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+body.nav-open .nav-toggle span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+}
+
+body.nav-open .nav-toggle span:nth-child(2) {
+    opacity: 0;
+    transform: scaleX(0.35);
+}
+
+body.nav-open .nav-toggle span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
 }
 
 .site-nav ul {
@@ -200,6 +262,7 @@ body.is-scrolled .site-header {
 }
 
 .site-nav a {
+    position: relative;
     display: inline-flex;
     align-items: center;
     min-height: 42px;
@@ -211,11 +274,31 @@ body.is-scrolled .site-header {
     transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
 }
 
+.site-nav a::after {
+    content: "";
+    position: absolute;
+    left: 0.9rem;
+    right: 0.9rem;
+    bottom: 0.46rem;
+    height: 2px;
+    border-radius: 999px;
+    background: var(--accent);
+    transform: scaleX(0);
+    transform-origin: left center;
+    transition: transform 0.2s ease;
+}
+
 .site-nav a:hover,
 .site-nav a:focus-visible,
 .site-nav a.is-current {
     background: rgba(47, 107, 71, 0.09);
     color: var(--brand-deep);
+}
+
+.site-nav a:hover::after,
+.site-nav a:focus-visible::after,
+.site-nav a.is-current::after {
+    transform: scaleX(1);
 }
 
 .site-nav a[data-page="contact"] {
@@ -274,6 +357,7 @@ body.is-scrolled .site-header {
     background:
         linear-gradient(160deg, rgba(255, 255, 252, 0.98), rgba(243, 247, 235, 0.94)),
         linear-gradient(135deg, rgba(47, 107, 71, 0.06), transparent 60%);
+    animation: softEntrance 0.55s ease both;
 }
 
 .hero-home .hero-copy {
@@ -429,6 +513,17 @@ h3 {
 
 .button:active {
     transform: translateY(0) scale(0.99);
+}
+
+button:disabled,
+.button:disabled {
+    cursor: progress;
+    opacity: 0.72;
+}
+
+.button:disabled:hover,
+.button:disabled:focus-visible {
+    transform: none;
 }
 
 .button-primary {
@@ -1032,6 +1127,12 @@ h3 {
     box-shadow: var(--shadow-md);
 }
 
+.helper-option.is-selected {
+    border-color: rgba(47, 107, 71, 0.36);
+    background: #fff;
+    box-shadow: inset 4px 0 0 var(--accent), var(--shadow-md);
+}
+
 .contact-form h2 {
     margin-top: 0.55rem;
 }
@@ -1061,6 +1162,19 @@ h3 {
     border-radius: var(--radius-card);
     background: rgba(255, 255, 255, 0.88);
     color: var(--text);
+    transition: border-color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field:focus-within span,
+.form-consent:focus-within span {
+    color: var(--brand);
+}
+
+.form-field input:focus,
+.form-field select:focus,
+.form-field textarea:focus {
+    border-color: rgba(47, 107, 71, 0.42);
+    background: #fff;
 }
 
 .form-field input,
@@ -1273,6 +1387,18 @@ h3 {
     transform: translateY(0);
 }
 
+@keyframes softEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .avatar {
     display: grid;
     place-items: center;
@@ -1387,14 +1513,15 @@ h3 {
 }
 
 .support-card .staff-bio {
-    display: -webkit-box;
+    display: block;
+    max-height: calc(1.65em * 4);
     overflow: hidden;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 4;
+    transition: max-height 0.28s ease;
 }
 
 .support-card.is-expanded .staff-bio {
     display: block;
+    max-height: 80rem;
     overflow: visible;
 }
 
@@ -1605,6 +1732,23 @@ h3 {
         justify-content: space-between;
     }
 
+    .site-nav a::after {
+        top: 50%;
+        right: auto;
+        bottom: auto;
+        left: 0.6rem;
+        width: 3px;
+        height: 58%;
+        transform: translateY(-50%) scaleY(0);
+        transform-origin: center top;
+    }
+
+    .site-nav a:hover::after,
+    .site-nav a:focus-visible::after,
+    .site-nav a.is-current::after {
+        transform: translateY(-50%) scaleY(1);
+    }
+
     .pathway-grid.journey-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -1763,6 +1907,11 @@ h3 {
         width: 100%;
     }
 
+    .back-to-top {
+        right: 0.75rem;
+        bottom: 0.75rem;
+    }
+
     .site-nav {
         top: 82px;
         left: 0.625rem;
@@ -1795,6 +1944,10 @@ h3 {
     .reveal-item {
         opacity: 1;
         transform: none;
+    }
+
+    .hero-copy {
+        animation: none;
     }
 
     .support-snapshot:hover .portrait-collage img,
