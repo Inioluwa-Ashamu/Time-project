@@ -116,6 +116,157 @@ const initScrollReveals = () => {
 
 initScrollReveals();
 
+const initEnquiryAssistant = () => {
+    const assistant = document.createElement("section");
+    assistant.className = "chat-assistant";
+    assistant.setAttribute("aria-label", "Quick help");
+
+    assistant.innerHTML = `
+        <button
+            class="chat-launcher"
+            type="button"
+            aria-expanded="false"
+            aria-controls="chat-panel"
+        >
+            Quick help
+        </button>
+        <div class="chat-panel" id="chat-panel" role="region" aria-labelledby="chat-title" hidden>
+            <div class="chat-header">
+                <div>
+                    <p class="chat-kicker">Time Specialist Support</p>
+                    <h2 id="chat-title">How can we help?</h2>
+                </div>
+                <button class="chat-close" type="button" aria-label="Close quick help">Close</button>
+            </div>
+            <div class="chat-body" aria-live="polite">
+                <p class="chat-message">
+                    Choose the option closest to what you need. For emergencies or urgent safeguarding concerns,
+                    use emergency services or your local safeguarding route.
+                </p>
+                <div class="chat-options" aria-label="Quick help options"></div>
+                <div class="chat-response" tabindex="-1"></div>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(assistant);
+
+    const launcher = assistant.querySelector(".chat-launcher");
+    const panel = assistant.querySelector(".chat-panel");
+    const closeButton = assistant.querySelector(".chat-close");
+    const optionsWrap = assistant.querySelector(".chat-options");
+    const response = assistant.querySelector(".chat-response");
+
+    const options = [
+        {
+            label: "Family support",
+            title: "Looking for support for a child or young person?",
+            text: "Tell us a little about the support needed, the area you live in, and the best way to contact you.",
+            links: [
+                { label: "Make an enquiry", href: "contact.html" },
+                { label: "Read how support works", href: "services.html" }
+            ]
+        },
+        {
+            label: "Referral",
+            title: "Making or discussing a referral?",
+            text: "Professionals can contact the team to discuss suitability, matching, and what information would help.",
+            links: [
+                { label: "Contact the team", href: "contact.html" },
+                { label: "Read parent FAQs", href: "faq.html" }
+            ]
+        },
+        {
+            label: "Recruitment",
+            title: "Interested in support work?",
+            text: "The careers page explains the role, current locations, application form, and job description.",
+            links: [
+                { label: "View careers", href: "careers.html" },
+                { label: "Email recruitment", href: "mailto:recruitment@time-specialist-support.com" }
+            ]
+        },
+        {
+            label: "Feedback",
+            title: "Need to share feedback or a complaint?",
+            text: "Use the contact form or phone/email the office. If your concern involves management, you can contact Tori directly.",
+            links: [
+                { label: "Send feedback", href: "contact.html" },
+                { label: "Email Tori", href: "mailto:tori@time-specialist-support.com" }
+            ]
+        },
+        {
+            label: "Urgent concern",
+            title: "Urgent safeguarding or emergency concern",
+            text: "Do not wait for an online response in an emergency. If someone is in immediate danger, call 999. For urgent safeguarding concerns, use the relevant local safeguarding route.",
+            links: [
+                { label: "Call 999", href: "tel:999" },
+                { label: "Call Time", href: "tel:+441618797984" }
+            ]
+        }
+    ];
+
+    const renderResponse = (option) => {
+        response.innerHTML = `
+            <h3>${escapeHtml(option.title)}</h3>
+            <p>${escapeHtml(option.text)}</p>
+            <div class="chat-links">
+                ${option.links
+                    .map((link) => `<a class="button button-secondary" href="${escapeHtml(link.href)}">${escapeHtml(link.label)}</a>`)
+                    .join("")}
+            </div>
+        `;
+        response.focus();
+    };
+
+    optionsWrap.innerHTML = options
+        .map((option, index) => `<button class="chat-option" type="button" data-option-index="${index}">${escapeHtml(option.label)}</button>`)
+        .join("");
+
+    const openPanel = () => {
+        panel.hidden = false;
+        launcher.setAttribute("aria-expanded", "true");
+        const firstOption = optionsWrap.querySelector("button");
+        if (firstOption) {
+            firstOption.focus();
+        }
+    };
+
+    const closePanel = () => {
+        panel.hidden = true;
+        launcher.setAttribute("aria-expanded", "false");
+        launcher.focus();
+    };
+
+    launcher.addEventListener("click", () => {
+        if (panel.hidden) {
+            openPanel();
+            return;
+        }
+
+        closePanel();
+    });
+
+    closeButton.addEventListener("click", closePanel);
+
+    optionsWrap.addEventListener("click", (event) => {
+        const optionButton = event.target.closest("[data-option-index]");
+        if (!optionButton) {
+            return;
+        }
+
+        const option = options[Number(optionButton.dataset.optionIndex)];
+        if (option) {
+            renderResponse(option);
+        }
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !panel.hidden) {
+            closePanel();
+        }
+    });
+};
+
 const escapeHtml = (value) =>
     String(value || "")
         .replaceAll("&", "&amp;")
@@ -123,6 +274,8 @@ const escapeHtml = (value) =>
         .replaceAll(">", "&gt;")
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#39;");
+
+initEnquiryAssistant();
 
 const getInitials = (name) =>
     String(name || "")
