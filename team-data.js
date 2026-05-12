@@ -5,28 +5,28 @@ window.teamDirectoryConfig = {
             name: "Tori",
             role: "Founder and Director",
             team: "office",
-            image_url: "https://time-specialist-support.com/wp-content/uploads/2025/04/Tori-photo.jpeg",
+            image_url: "assets/tori-profile.jpg",
             bio: "Hi I'm Tori, Founder and Director of Time Specialist Support. My background is in Speech and Language Therapy and I first started learning about autism when I was studying at university. I soon became captivated by the autistic children I was meeting and have been ever since. Outside of work I enjoy singing, creative writing and learning to play the piano."
         },
         {
             name: "Ally",
             role: "Service Manager",
             team: "office",
-            image_url: "https://time-specialist-support.com/wp-content/uploads/2017/02/Ally-e1487589049713.jpg",
+            image_url: "assets/ally-profile.jpg",
             bio: "I joined Time in July 2016 as the Service Manager. Every day is different, and I get to meet, talk to, and support lots of fabulous staff and families while trying to give the best service possible. In my spare time, I enjoy hiking in the Peak and Lake District, and travelling to Switzerland whenever I can."
         },
         {
             name: "Jack",
             role: "Recruitment Co-ordinator",
             team: "office",
-            image_url: "https://time-specialist-support.com/wp-content/uploads/2024/03/Jack.jpg",
+            image_url: "assets/jack-profile.jpg",
             bio: "Hi, I'm Jack and I am the Recruitment Co-ordinator at Time Specialist Support. I have around two years of experience in recruitment and want to use what I know to make the Time support worker team even stronger. In my spare time, I enjoy going out and socialising with friends."
         },
         {
             name: "Richard",
             role: "Office Supervisor",
             team: "office",
-            image_url: "https://time-specialist-support.com/wp-content/uploads/2024/03/Richard.jpg",
+            image_url: "assets/richard-profile.jpg",
             bio: "Hi, I've been working for TSS for over 10 years. I started as a support worker while also working as a teaching assistant in a secondary school. Over the last couple of years, I have moved to working in the office full-time. When I am not working I love hiking, reading and playing board games."
         },
         {

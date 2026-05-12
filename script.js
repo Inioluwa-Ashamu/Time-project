@@ -4,6 +4,28 @@ const currentPage = document.body.dataset.page;
 const reducedMotionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
 let revealObserver;
 let revealDelayIndex = 0;
+let scrollFrame = null;
+const scrollTasks = new Set();
+
+const requestScrollUpdate = () => {
+    if (scrollFrame !== null) {
+        return;
+    }
+
+    scrollFrame = window.requestAnimationFrame(() => {
+        scrollFrame = null;
+        scrollTasks.forEach((task) => task());
+    });
+};
+
+const registerScrollTask = (task) => {
+    scrollTasks.add(task);
+    task();
+
+    if (scrollTasks.size === 1) {
+        window.addEventListener("scroll", requestScrollUpdate, { passive: true });
+    }
+};
 
 if (navToggle && siteNav) {
     const mobileNav = window.matchMedia("(max-width: 1100px)");
@@ -75,8 +97,7 @@ const handleScroll = () => {
     document.body.classList.toggle("is-scrolled", window.scrollY > 12);
 };
 
-handleScroll();
-window.addEventListener("scroll", handleScroll, { passive: true });
+registerScrollTask(handleScroll);
 
 const createRevealObserver = () => {
     if (revealObserver || !("IntersectionObserver" in window) || reducedMotionQuery.matches) {
@@ -165,8 +186,7 @@ const initScrollControls = () => {
         });
     });
 
-    updateScrollControls();
-    window.addEventListener("scroll", updateScrollControls, { passive: true });
+    registerScrollTask(updateScrollControls);
     window.addEventListener("resize", updateScrollControls);
 };
 
@@ -186,6 +206,71 @@ const initExternalLinkLabels = () => {
 };
 
 initExternalLinkLabels();
+
+const initGuidedAssistant = () => {
+    if (document.querySelector(".guided-assistant")) {
+        return;
+    }
+
+    const assistant = document.createElement("aside");
+    assistant.className = "guided-assistant";
+    assistant.setAttribute("aria-label", "Guided enquiry assistant");
+    assistant.innerHTML = `
+        <button class="assistant-toggle" type="button" aria-expanded="false" aria-controls="guided-assistant-panel">
+            Help
+        </button>
+        <div class="assistant-panel" id="guided-assistant-panel" role="dialog" aria-labelledby="guided-assistant-title" hidden>
+            <div class="assistant-header">
+                <p class="assistant-title" id="guided-assistant-title">Guided enquiry assistant</p>
+                <button class="assistant-close" type="button" aria-label="Close guided enquiry assistant">Close</button>
+            </div>
+            <p class="assistant-message">
+                This is not live chat. It can help you find the right page or start a message. It is not monitored
+                for emergencies. If someone is in immediate danger, call 999 or contact the relevant safeguarding service.
+            </p>
+            <div class="assistant-actions" aria-label="Choose a route">
+                <a href="contact.html?topic=support#contact-form">Family support enquiry</a>
+                <a href="contact.html?topic=referral#contact-form">Professional referral</a>
+                <a href="careers.html">Work for us</a>
+                <a href="faq.html">Read FAQs</a>
+                <a href="support-workers.html" rel="nofollow">Support Worker Hub</a>
+            </div>
+        </div>
+    `;
+
+    const toggle = assistant.querySelector(".assistant-toggle");
+    const panel = assistant.querySelector(".assistant-panel");
+    const close = assistant.querySelector(".assistant-close");
+
+    const setOpen = (isOpen) => {
+        panel.hidden = !isOpen;
+        toggle.setAttribute("aria-expanded", String(isOpen));
+
+        if (isOpen) {
+            close.focus();
+        }
+    };
+
+    toggle.addEventListener("click", () => {
+        setOpen(panel.hidden);
+    });
+
+    close.addEventListener("click", () => {
+        setOpen(false);
+        toggle.focus();
+    });
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !panel.hidden) {
+            setOpen(false);
+            toggle.focus();
+        }
+    });
+
+    document.body.append(assistant);
+};
+
+initGuidedAssistant();
 
 const initContactHelper = () => {
     const helperButtons = document.querySelectorAll(".helper-option[data-template]");
@@ -402,7 +487,7 @@ const resolveTeamEndpoint = (config) => {
 const renderTeamCard = (member, variant = "support") => {
     const cardClass = variant === "office" ? "profile-card staff-card office-card" : "profile-card staff-card support-card";
     const imageMarkup = member.image_url
-        ? `<img class="staff-photo" src="${escapeHtml(member.image_url)}" alt="${escapeHtml(member.name)}">`
+        ? `<img class="staff-photo" src="${escapeHtml(member.image_url)}" width="320" height="320" alt="${escapeHtml(member.name)}" loading="lazy" decoding="async">`
         : "";
     const actionMarkup =
         variant === "support"
@@ -461,8 +546,11 @@ const initTeamDirectory = async () => {
     const endpoint = resolveTeamEndpoint(config);
 
     if (endpoint) {
+        const controller = "AbortController" in window ? new AbortController() : null;
+        const timeoutId = controller ? window.setTimeout(() => controller.abort(), 4500) : null;
+
         try {
-            const response = await fetch(endpoint);
+            const response = await fetch(endpoint, controller ? { signal: controller.signal } : undefined);
             if (!response.ok) {
                 throw new Error(`Request failed with ${response.status}`);
             }
@@ -483,6 +571,10 @@ const initTeamDirectory = async () => {
             }
         } catch (error) {
             console.warn("Using fallback team data:", error);
+        } finally {
+            if (timeoutId) {
+                window.clearTimeout(timeoutId);
+            }
         }
     }
 
