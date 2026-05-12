@@ -77,7 +77,7 @@ window.addEventListener("scroll", handleScroll, { passive: true });
 
 const initScrollReveals = () => {
     const revealItems = document.querySelectorAll(
-        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
+        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .step-card, .faq-item, .quote-card, .resource-card, .contact-card, .split-panel, .founder-profile, .practice-strip, .support-snapshot, .proof-grid article"
     );
 
     if (!revealItems.length) {

@@ -217,6 +217,18 @@ body.is-scrolled .site-header {
     color: var(--brand-deep);
 }
 
+.site-nav .nav-cta {
+    background: var(--brand-deep);
+    color: #fff;
+}
+
+.site-nav .nav-cta:hover,
+.site-nav .nav-cta:focus-visible,
+.site-nav .nav-cta.is-current {
+    background: var(--brand);
+    color: #fff;
+}
+
 :focus-visible {
     outline: none;
     box-shadow: var(--focus-ring);
@@ -291,17 +303,17 @@ h2 {
     font-family: "Iowan Old Style", "Palatino Linotype", "Book Antiqua", serif;
     font-weight: 700;
     line-height: 1.08;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
 }
 
 h1 {
     margin-top: 1rem;
     font-size: clamp(2.8rem, 6vw, 5rem);
-    max-width: 13ch;
+    max-width: 16ch;
 }
 
 .page-hero h1 {
-    max-width: 14ch;
+    max-width: 17ch;
 }
 
 h2 {
@@ -340,6 +352,10 @@ h3 {
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 2rem;
+}
+
+.section-action {
+    margin-top: 1.5rem;
 }
 
 .trust-strip {
@@ -543,6 +559,103 @@ h3 {
     border-radius: var(--radius-md);
     background: rgba(255, 255, 255, 0.74);
     border: 1px solid rgba(21, 58, 40, 0.08);
+}
+
+.step-grid,
+.proof-grid,
+.faq-preview-list,
+.faq-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.step-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.step-card,
+.faq-item {
+    padding: 1.5rem;
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    background: rgba(255, 255, 252, 0.9);
+    box-shadow: var(--shadow-md);
+}
+
+.step-number {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    margin-bottom: 1rem;
+    border-radius: 50%;
+    background: var(--brand-deep);
+    color: #fff;
+    font-weight: 800;
+}
+
+.step-card h3,
+.faq-item h3 {
+    color: var(--brand-deep);
+}
+
+.step-card p,
+.faq-item p {
+    margin-top: 0.7rem;
+    color: var(--muted);
+}
+
+.proof-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.82fr) minmax(0, 1.18fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.proof-copy {
+    position: sticky;
+    top: 118px;
+}
+
+.proof-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.proof-grid article {
+    padding: 1.2rem;
+    border: 1px solid rgba(21, 58, 40, 0.1);
+    border-radius: var(--radius-md);
+    background: rgba(255, 255, 255, 0.74);
+    box-shadow: var(--shadow-md);
+}
+
+.proof-grid strong {
+    display: block;
+    color: var(--brand-deep);
+    margin-bottom: 0.35rem;
+}
+
+.proof-grid span {
+    color: var(--muted);
+}
+
+.faq-preview {
+    display: grid;
+    grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+    gap: 1.25rem;
+    align-items: start;
+}
+
+.faq-preview .button {
+    grid-column: 2;
+    width: fit-content;
+}
+
+.faq-layout {
+    display: grid;
+    grid-template-columns: minmax(240px, 0.55fr) minmax(0, 1.45fr);
+    gap: 1.5rem;
+    align-items: start;
 }
 
 .hero-metrics strong {
@@ -754,7 +867,9 @@ h3 {
 .split-panel,
 .pathway-card,
 .detail-card,
-.spotlight-panel {
+.spotlight-panel,
+.step-card,
+.faq-item {
     padding: 1.5rem;
     border-radius: var(--radius-lg);
     background: rgba(255, 255, 252, 0.9);
@@ -1069,7 +1184,9 @@ h3 {
 .spotlight-panel:hover,
 .contact-card:hover,
 .quote-card:hover,
-.split-panel:hover {
+.split-panel:hover,
+.step-card:hover,
+.faq-item:hover {
     transform: translateY(-2px);
     box-shadow: 0 18px 36px rgba(18, 43, 31, 0.1);
 }
@@ -1346,6 +1463,7 @@ h3 {
 
 @media (max-width: 1080px) {
     .hero-grid,
+    .step-grid,
     .three-up,
     .quote-grid,
     .value-grid,
@@ -1354,7 +1472,8 @@ h3 {
     .detail-grid,
     .quick-link-grid,
     .timeline-grid,
-    .footer-grid {
+    .footer-grid,
+    .proof-grid {
         grid-template-columns: 1fr 1fr;
     }
 
@@ -1423,6 +1542,9 @@ h3 {
 
     .hero-grid,
     .feature-layout,
+    .proof-layout,
+    .faq-preview,
+    .faq-layout,
     .founder-profile,
     .practice-strip,
     .founder-note,
@@ -1442,8 +1564,18 @@ h3 {
     .footer-grid,
     .hero-metrics,
     .office-directory,
-    .support-directory {
+    .support-directory,
+    .step-grid,
+    .proof-grid {
         grid-template-columns: 1fr;
+    }
+
+    .proof-copy {
+        position: static;
+    }
+
+    .faq-preview .button {
+        grid-column: auto;
     }
 
     .office-card {
@@ -1503,6 +1635,8 @@ h3 {
     .founder-copy,
     .practice-copy,
     .info-card,
+    .step-card,
+    .faq-item,
     .mini-card,
     .timeline-card,
     .profile-card,
