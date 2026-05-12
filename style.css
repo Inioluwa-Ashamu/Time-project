@@ -677,6 +677,16 @@ button:disabled,
     border: 1px solid rgba(21, 58, 40, 0.08);
 }
 
+.quote-source {
+    display: block;
+    margin-top: 0.95rem;
+    color: var(--accent-deep);
+    font-size: 0.78rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+}
+
 .hero-metrics strong {
     display: block;
     color: var(--brand-deep);
@@ -829,6 +839,31 @@ button:disabled,
 
 .section-intro .button {
     margin-top: 1.25rem;
+}
+
+.proof-list {
+    display: grid;
+    gap: 0.7rem;
+    margin-top: 1.15rem;
+    list-style: none;
+}
+
+.proof-list li {
+    position: relative;
+    padding-left: 1.45rem;
+    color: var(--muted);
+}
+
+.proof-list li::before {
+    content: "";
+    position: absolute;
+    top: 0.65rem;
+    left: 0;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--brand);
+    box-shadow: 0 0 0 4px rgba(47, 107, 71, 0.08);
 }
 
 .three-up,

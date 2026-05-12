@@ -128,7 +128,7 @@ const queueRevealItems = (items) => {
 
 const initScrollReveals = () => {
     const revealItems = document.querySelectorAll(
-        ".section-heading, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .contact-helper, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
+        ".section-heading, .proof-list, .info-card, .mini-card, .timeline-card, .pathway-card, .detail-card, .quote-card, .resource-card, .contact-card, .contact-helper, .split-panel, .founder-profile, .practice-strip, .support-snapshot"
     );
 
     queueRevealItems(revealItems);
