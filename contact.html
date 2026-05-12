@@ -53,6 +53,7 @@
                 <div class="container contact-layout">
                     <form
                         class="contact-form"
+                        id="contact-form"
                         action="https://formsubmit.co/info@time-specialist-support.com"
                         method="POST"
                     >
@@ -69,6 +70,10 @@
                         <div>
                             <p class="contact-label">Send a message</p>
                             <h2>Tell us what you need help with.</h2>
+                            <p class="form-note">
+                                Required fields are name, email, enquiry type, message, and consent. The other
+                                details are optional, but they can help us reply usefully.
+                            </p>
                         </div>
 
                         <div class="form-grid">
@@ -85,7 +90,7 @@
 
                         <div class="form-grid">
                             <label class="form-field" for="contact-phone">
-                                <span>Phone</span>
+                                <span>Phone (optional)</span>
                                 <input id="contact-phone" name="phone" type="tel" autocomplete="tel">
                             </label>
 
@@ -104,7 +109,7 @@
 
                         <div class="form-grid">
                             <label class="form-field" for="contact-area">
-                                <span>Area</span>
+                                <span>Area (optional)</span>
                                 <input
                                     id="contact-area"
                                     name="area"
@@ -131,7 +136,7 @@
                             </label>
 
                             <label class="form-field" for="contact-time">
-                                <span>Best time to contact</span>
+                                <span>Best time to contact (optional)</span>
                                 <input id="contact-time" name="best_time_to_contact" type="text" placeholder="For example, weekday mornings">
                             </label>
                         </div>
