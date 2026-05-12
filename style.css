@@ -57,6 +57,17 @@ a {
     color: inherit;
 }
 
+h1,
+h2,
+h3,
+p,
+a,
+button,
+span,
+label {
+    overflow-wrap: break-word;
+}
+
 img,
 svg {
     display: block;
@@ -407,6 +418,8 @@ h3 {
     padding: 0.88rem 1.4rem;
     border-radius: 999px;
     font-weight: 700;
+    line-height: 1.25;
+    text-align: center;
     text-decoration: none;
     transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease, color 0.2s ease;
 }
@@ -1157,6 +1170,7 @@ h3 {
     color: var(--brand-deep);
     font-weight: 700;
     line-height: 1.35;
+    overflow-wrap: anywhere;
     text-decoration: none;
     transition: transform 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
 }
@@ -1866,6 +1880,31 @@ h3 {
     .chat-panel {
         max-height: calc(100svh - 1.25rem);
         overflow-y: auto;
+    }
+
+    .site-footer {
+        padding-bottom: 5.5rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .header-inner {
+        gap: 0.75rem;
+    }
+
+    .brand-logo {
+        width: 165px;
+    }
+
+    .nav-toggle {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+    }
+
+    .chat-launcher {
+        min-height: 46px;
+        padding: 0.7rem 0.95rem;
     }
 }
 

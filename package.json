@@ -1,0 +1,25 @@
+{
+  "name": "time-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "script.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "screenshots:mobile": "node scripts/mobile-screenshots.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Inioluwa-Ashamu/Time-project.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Inioluwa-Ashamu/Time-project/issues"
+  },
+  "homepage": "https://github.com/Inioluwa-Ashamu/Time-project#readme",
+  "devDependencies": {
+    "playwright": "^1.60.0"
+  }
+}
