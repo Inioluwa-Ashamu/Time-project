@@ -698,6 +698,15 @@ h3 {
     color: rgba(245, 248, 242, 0.84);
 }
 
+.section-dark .text-link {
+    color: #f4efcf;
+}
+
+.section-dark .text-link:hover,
+.section-dark .text-link:focus-visible {
+    color: #fff8d8;
+}
+
 .split-heading,
 .two-column,
 .feature-layout,
