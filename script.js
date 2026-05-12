@@ -390,7 +390,10 @@ const renderTeamCard = (member, variant = "support") => {
     const imageMarkup = member.image_url
         ? `<img class="staff-photo" src="${escapeHtml(member.image_url)}" alt="${escapeHtml(member.name)}">`
         : "";
-    const actionMarkup = `<button class="text-link profile-toggle" type="button" aria-expanded="false">Read full profile</button>`;
+    const actionMarkup =
+        variant === "support"
+            ? `<button class="text-link profile-toggle" type="button" aria-expanded="false">Read full profile</button>`
+            : "";
 
     return `
         <article class="${cardClass}">
@@ -545,20 +548,17 @@ const initTeamDirectory = async () => {
         });
     }
 
-    const handleProfileToggle = (event) => {
+    supportDirectory.addEventListener("click", (event) => {
         const toggle = event.target.closest(".profile-toggle");
         if (!toggle) {
             return;
         }
 
-        const card = toggle.closest(".support-card, .office-card");
+        const card = toggle.closest(".support-card");
         const isExpanded = card.classList.toggle("is-expanded");
         toggle.setAttribute("aria-expanded", String(isExpanded));
         toggle.textContent = isExpanded ? "Show less" : "Read full profile";
-    };
-
-    officeDirectory.addEventListener("click", handleProfileToggle);
-    supportDirectory.addEventListener("click", handleProfileToggle);
+    });
 
 };
 
