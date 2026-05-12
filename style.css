@@ -1358,6 +1358,10 @@ h3 {
     -webkit-line-clamp: 4;
 }
 
+.office-card .profile-toggle {
+    display: none;
+}
+
 .support-card.is-expanded .staff-bio {
     display: block;
     overflow: visible;
@@ -1811,9 +1815,99 @@ h3 {
 
     .team-search-panel,
     .office-card,
-    .support-card,
     .quick-link-grid {
         padding: 1.25rem;
+    }
+
+    .office-card {
+        grid-template-columns: minmax(84px, 112px) minmax(0, 1fr);
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .office-card .staff-photo-wrap {
+        aspect-ratio: 1 / 1;
+    }
+
+    .office-card .staff-name {
+        font-size: 1.15rem;
+    }
+
+    .office-card .profile-role {
+        font-size: 0.85rem;
+        line-height: 1.3;
+    }
+
+    .office-card .staff-bio {
+        display: none;
+    }
+
+    .office-card.is-expanded {
+        grid-template-columns: 1fr;
+        align-items: start;
+    }
+
+    .office-card.is-expanded .staff-photo-wrap {
+        aspect-ratio: 4 / 3.2;
+        max-width: none;
+    }
+
+    .office-card.is-expanded .staff-bio {
+        display: block;
+    }
+
+    .office-card .profile-toggle {
+        display: inline-flex;
+        min-height: 38px;
+        font-size: 0.86rem;
+    }
+
+    .support-directory {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 0.75rem;
+    }
+
+    .support-card {
+        gap: 0.65rem;
+        padding: 0.75rem;
+        border-radius: var(--radius-md);
+    }
+
+    .support-card.is-expanded {
+        grid-column: 1 / -1;
+        padding: 1rem;
+    }
+
+    .support-card .staff-card-body {
+        gap: 0.45rem;
+    }
+
+    .support-card .staff-photo-wrap {
+        aspect-ratio: 4 / 4.6;
+        border-radius: 12px;
+    }
+
+    .support-card .staff-name {
+        font-size: 1rem;
+    }
+
+    .support-card .profile-role {
+        font-size: 0.8rem;
+        line-height: 1.25;
+    }
+
+    .support-card .staff-bio {
+        display: none;
+    }
+
+    .support-card.is-expanded .staff-bio {
+        display: block;
+        font-size: 0.92rem;
+    }
+
+    .support-card .profile-toggle {
+        min-height: 38px;
+        font-size: 0.86rem;
     }
 
     .quick-link-grid {
