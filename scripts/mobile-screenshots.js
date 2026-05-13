@@ -18,6 +18,7 @@ const pages = [
     "policies.html",
     "extra-elearning.html",
     "orientation-elearning.html",
+    "elearning-modules.html",
     "one-minute-feedback.html",
     "contact.html",
     "team.html",
