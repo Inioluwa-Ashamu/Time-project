@@ -18,27 +18,182 @@
   [headers.values]
     Content-Type = "text/plain; charset=utf-8"
 
+[[headers]]
+  for = "/support-workers.html"
+  [headers.values]
+    Basic-Auth = "support:Aut15m2008"
+
 [[redirects]]
   from = "/"
   query = {page_id = "131"}
-  to = "/resources.html"
+  to = "/accessibility.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "3376"}
-  to = "/resources.html"
+  to = "/being-open.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "3399"}
+  to = "/modern-slavery.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "3316"}
+  to = "/policies.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "325"}
   to = "/support-workers.html"
   status = 301
 
 [[redirects]]
-  from = "/one-minute-feedback-forms/"
+  from = "/"
+  query = {page_id = "1163"}
   to = "/support-workers.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1379"}
+  to = "/extra-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1407"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "993"}
+  to = "/one-minute-feedback.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1347"}
+  to = "/extra-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1358"}
+  to = "/extra-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1362"}
+  to = "/extra-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "3115"}
+  to = "/extra-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "3272"}
+  to = "/extra-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1503"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1510"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1571"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1663"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1486"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1537"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1409"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1418"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1634"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1567"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1528"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1621"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1533"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/"
+  query = {page_id = "1523"}
+  to = "/orientation-elearning.html"
+  status = 301
+
+[[redirects]]
+  from = "/one-minute-feedback-forms/"
+  to = "/one-minute-feedback.html"
   status = 301
 
 [[redirects]]
