@@ -1,4 +1,9 @@
 User-agent: *
 Allow: /
+Disallow: /support-workers.html
+Disallow: /extra-elearning.html
+Disallow: /orientation-elearning.html
+Disallow: /elearning-modules.html
+Disallow: /one-minute-feedback.html
 
 Sitemap: https://time-specialist-support.com/sitemap.xml
