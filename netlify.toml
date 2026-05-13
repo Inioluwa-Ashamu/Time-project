@@ -80,115 +80,115 @@
 [[redirects]]
   from = "/"
   query = {page_id = "1347"}
-  to = "/elearning-module.html?module=epilepsy"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1358"}
-  to = "/elearning-module.html?module=behaviour-that-challenges"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1362"}
-  to = "/elearning-module.html?module=sensory-perception"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "3115"}
-  to = "/elearning-module.html?module=diabetes-awareness"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "3272"}
-  to = "/elearning-module.html?module=modern-slavery-awareness"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1503"}
-  to = "/elearning-module.html?module=online-booking-system"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1510"}
-  to = "/elearning-module.html?module=data-protection"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1571"}
-  to = "/elearning-module.html?module=cancellation-procedures"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1663"}
-  to = "/elearning-module.html?module=safeguarding"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1486"}
-  to = "/elearning-module.html?module=autism"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1537"}
-  to = "/elearning-module.html?module=communication"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1409"}
-  to = "/elearning-module.html?module=sensory-theory"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1418"}
-  to = "/elearning-module.html?module=behaviour"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1634"}
-  to = "/elearning-module.html?module=first-aid"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1567"}
-  to = "/elearning-module.html?module=best-support-worker"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1528"}
-  to = "/elearning-module.html?module=personal-care"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1621"}
-  to = "/elearning-module.html?module=manual-handling"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1533"}
-  to = "/elearning-module.html?module=sensory-strategies"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
   from = "/"
   query = {page_id = "1523"}
-  to = "/elearning-module.html?module=top-tips"
+  to = "/elearning-modules.html"
   status = 301
 
 [[redirects]]
