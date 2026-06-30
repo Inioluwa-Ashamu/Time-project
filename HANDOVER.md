@@ -19,7 +19,7 @@ The team page is driven by `team-data.js` and the CSV files in the repo. Keep na
 
 ## Updating Resources
 
-Support worker resources live in `support-workers.html`. Keep links grouped by purpose: safeguarding, session forms, planning, admin, training, and reference material. Review old WordPress links regularly and replace them with stable document links where possible.
+Support worker resources live in `support-workers.html`. Keep links grouped by purpose: safeguarding, session forms, planning, admin, training, and reference material. WordPress-hosted support worker documents have been copied into `assets/documents/support-workers/`; use local links for new resources where possible.
 
 ## Contact Form
 
@@ -38,7 +38,7 @@ The form asks users not to share unnecessary sensitive detail and links to `priv
 
 ## Future Improvements
 
-- Replace remote WordPress image URLs with locally optimised images when final assets are approved.
+- Keep team image references local in `assets/images/team/` when updating `team-data.js` or the CSV source files.
 - Add real parent testimonials only when the wording is approved and consented.
 - Add a fuller privacy policy if Time wants more formal GDPR wording from a legal/privacy adviser.
 - Consider a true live chat only if the team can monitor it reliably.
