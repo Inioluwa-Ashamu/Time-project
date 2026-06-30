@@ -1,6 +1,6 @@
 -- Time Specialist Support website content backend.
 -- Run this in the Supabase SQL editor for the project that will power the site.
--- The public website uses the anon key only. Do not place a service-role key in
+-- The public website uses the publishable key only. Do not place a service-role key in
 -- frontend code, Netlify public env vars, or committed files.
 
 create extension if not exists pgcrypto;

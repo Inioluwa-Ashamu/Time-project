@@ -23,7 +23,7 @@ Support worker resources live in `support-workers.html`. Keep links grouped by p
 
 ## Supabase Admin
 
-The team directory can read published public profiles from Supabase before falling back to the Google Sheet/static data in `team-data.js`. Backend setup lives in `supabase/schema.sql` and `supabase/README.md`. Browser code uses only the public anon key in `assets/js/supabase-config.js`; never add a service-role key to frontend code. The admin dashboard is at `admin/index.html` and requires Supabase Auth plus an `admin_users` allow-list row.
+The team directory can read published public profiles from Supabase before falling back to the Google Sheet/static data in `team-data.js`. Backend setup lives in `supabase/schema.sql` and `supabase/README.md`. Browser code uses only the Supabase publishable key in `assets/js/supabase-config.js`; never add a secret/service-role key to frontend code. The admin dashboard is at `admin/index.html` and requires Supabase Auth plus an `admin_users` allow-list row.
 
 ## Contact Form
 

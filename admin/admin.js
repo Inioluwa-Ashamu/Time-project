@@ -51,14 +51,16 @@ const clearError = (element) => {
 
 const isSupabaseConfigured = () => {
     const config = window.tssSupabaseConfig || {};
+    const apiKey = config.publishableKey || config.anonKey || "";
     return Boolean(
         window.supabase &&
         typeof window.supabase.createClient === "function" &&
         config.enabled !== false &&
         config.url &&
-        config.anonKey &&
+        apiKey &&
         !String(config.url).includes("YOUR-PROJECT-REF") &&
-        !String(config.anonKey).includes("YOUR_PUBLIC_ANON_KEY")
+        !String(apiKey).includes("YOUR_PUBLIC_ANON_KEY") &&
+        !String(apiKey).includes("YOUR_PUBLISHABLE_KEY")
     );
 };
 
@@ -69,7 +71,7 @@ const getClient = () => {
 
     if (!supabaseClient) {
         const config = window.tssSupabaseConfig;
-        supabaseClient = window.supabase.createClient(config.url, config.anonKey);
+        supabaseClient = window.supabase.createClient(config.url, config.publishableKey || config.anonKey);
     }
 
     return supabaseClient;

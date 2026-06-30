@@ -305,13 +305,15 @@ const normalizeTeamMember = (member) => ({
 
 const getSupabaseConfig = () => {
     const config = window.tssSupabaseConfig || {};
+    const apiKey = config.publishableKey || config.anonKey || "";
     const hasClient = window.supabase && typeof window.supabase.createClient === "function";
     const isConfigured =
         config.enabled !== false &&
         config.url &&
-        config.anonKey &&
+        apiKey &&
         !String(config.url).includes("YOUR-PROJECT-REF") &&
-        !String(config.anonKey).includes("YOUR_PUBLIC_ANON_KEY");
+        !String(apiKey).includes("YOUR_PUBLIC_ANON_KEY") &&
+        !String(apiKey).includes("YOUR_PUBLISHABLE_KEY");
 
     if (!hasClient || !isConfigured) {
         return null;
@@ -328,7 +330,7 @@ const createSupabaseBrowserClient = () => {
     }
 
     if (!window.tssSupabaseClient) {
-        window.tssSupabaseClient = window.supabase.createClient(config.url, config.anonKey);
+        window.tssSupabaseClient = window.supabase.createClient(config.url, config.publishableKey || config.anonKey);
     }
 
     return window.tssSupabaseClient;
