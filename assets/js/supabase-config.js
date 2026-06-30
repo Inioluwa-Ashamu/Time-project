@@ -1,0 +1,6 @@
+window.tssSupabaseConfig = {
+    enabled: false,
+    url: "https://YOUR-PROJECT-REF.supabase.co",
+    anonKey: "YOUR_PUBLIC_ANON_KEY",
+    profileImageBucket: "profile-images"
+};

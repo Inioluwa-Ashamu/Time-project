@@ -21,6 +21,10 @@ The team page is driven by `team-data.js` and the CSV files in the repo. Keep na
 
 Support worker resources live in `support-workers.html`. Keep links grouped by purpose: safeguarding, session forms, planning, admin, training, and reference material. WordPress-hosted support worker documents have been copied into `assets/documents/support-workers/`; use local links for new resources where possible.
 
+## Supabase Admin
+
+The team directory can read published public profiles from Supabase before falling back to the Google Sheet/static data in `team-data.js`. Backend setup lives in `supabase/schema.sql` and `supabase/README.md`. Browser code uses only the public anon key in `assets/js/supabase-config.js`; never add a service-role key to frontend code. The admin dashboard is at `admin/index.html` and requires Supabase Auth plus an `admin_users` allow-list row.
+
 ## Contact Form
 
 The contact form posts to FormSubmit using `info@time-specialist-support.com`. The form redirects to `thank-you.html` and includes an autoresponse. Test the form after deployment because FormSubmit may require first-time email verification for the receiving address.

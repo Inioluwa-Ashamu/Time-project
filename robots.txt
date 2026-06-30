@@ -1,6 +1,7 @@
 User-agent: *
 Allow: /
 Disallow: /support-workers.html
+Disallow: /admin/
 Disallow: /extra-elearning.html
 Disallow: /orientation-elearning.html
 Disallow: /elearning-modules.html

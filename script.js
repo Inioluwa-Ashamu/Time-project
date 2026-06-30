@@ -296,12 +296,84 @@ const getInitials = (name) =>
         .toUpperCase();
 
 const normalizeTeamMember = (member) => ({
-    name: member.name || member.Name || "",
+    name: member.name || member.display_name || member.Name || "",
     role: member.role || member.Role || "",
     bio: member.bio || member.Bio || "",
-    team: (member.team || member.Team || "support").toLowerCase(),
+    team: (member.team || member.directory_group || member.Team || "support").toLowerCase(),
     image_url: member.image_url || member.Image_URL || member.image || member.Image || ""
 });
+
+const getSupabaseConfig = () => {
+    const config = window.tssSupabaseConfig || {};
+    const hasClient = window.supabase && typeof window.supabase.createClient === "function";
+    const isConfigured =
+        config.enabled !== false &&
+        config.url &&
+        config.anonKey &&
+        !String(config.url).includes("YOUR-PROJECT-REF") &&
+        !String(config.anonKey).includes("YOUR_PUBLIC_ANON_KEY");
+
+    if (!hasClient || !isConfigured) {
+        return null;
+    }
+
+    return config;
+};
+
+const createSupabaseBrowserClient = () => {
+    const config = getSupabaseConfig();
+
+    if (!config) {
+        return null;
+    }
+
+    if (!window.tssSupabaseClient) {
+        window.tssSupabaseClient = window.supabase.createClient(config.url, config.anonKey);
+    }
+
+    return window.tssSupabaseClient;
+};
+
+const getSupabasePublicImageUrl = (imagePath) => {
+    const client = createSupabaseBrowserClient();
+    const config = getSupabaseConfig();
+
+    if (!client || !config || !imagePath) {
+        return "";
+    }
+
+    const bucket = config.profileImageBucket || "profile-images";
+    return client.storage.from(bucket).getPublicUrl(imagePath).data.publicUrl || "";
+};
+
+const fetchSupabaseTeamMembers = async () => {
+    const client = createSupabaseBrowserClient();
+
+    if (!client) {
+        return [];
+    }
+
+    const { data, error } = await client
+        .from("team_profiles")
+        .select("id, display_name, role, directory_group, bio, image_path, image_url, sort_order")
+        .eq("published", true)
+        .eq("public_profile", true)
+        .order("directory_group", { ascending: true })
+        .order("sort_order", { ascending: true })
+        .order("display_name", { ascending: true });
+
+    if (error) {
+        throw error;
+    }
+
+    return (data || []).map((member) => ({
+        name: member.display_name,
+        role: member.role,
+        team: member.directory_group,
+        bio: member.bio,
+        image_url: member.image_url || getSupabasePublicImageUrl(member.image_path)
+    }));
+};
 
 const parseCsvLine = (line) => {
     const values = [];
@@ -445,8 +517,20 @@ const initTeamDirectory = async () => {
     const config = window.teamDirectoryConfig || {};
     let teamMembers = Array.isArray(config.fallback) ? config.fallback.slice() : [];
     const endpoint = resolveTeamEndpoint(config);
+    let loadedFromSupabase = false;
 
-    if (endpoint) {
+    try {
+        const supabaseMembers = await fetchSupabaseTeamMembers();
+
+        if (supabaseMembers.length) {
+            teamMembers = supabaseMembers;
+            loadedFromSupabase = true;
+        }
+    } catch (error) {
+        console.warn("Using non-Supabase team data:", error);
+    }
+
+    if (endpoint && !loadedFromSupabase) {
         try {
             const response = await fetch(endpoint);
             if (!response.ok) {

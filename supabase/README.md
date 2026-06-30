@@ -1,0 +1,36 @@
+# Supabase Backend
+
+This project now supports Supabase as the real content backend for team profiles and staff/support-worker resource content.
+
+## What Supabase Stores
+
+- `team_profiles`: office team and support-worker directory profiles.
+- `staff_resources`: support-worker/admin resource links and documents.
+- `profile-images` storage bucket: public profile images uploaded from the admin dashboard.
+- `admin_users`: allow-list of authenticated Supabase users who can manage content.
+
+## Security Model
+
+- The public site uses only the Supabase anon key.
+- Public reads are limited by RLS to `published = true` and `public_profile = true` for team profiles.
+- Public staff resource reads are limited to `published = true` and `visibility = 'public'`.
+- Admin reads/writes require Supabase Auth plus a matching row in `admin_users`.
+- Never expose a Supabase service-role key in frontend code or Netlify public variables.
+
+## Setup
+
+1. Create a Supabase project.
+2. Open the SQL editor and run `supabase/schema.sql`.
+3. In Supabase Auth, create/invite the admin user.
+4. Add that user to `admin_users` using the SQL snippet at the bottom of `schema.sql`.
+5. In Supabase Storage, confirm the `profile-images` bucket exists and is public.
+6. Fill in the project URL and anon key in `assets/js/supabase-config.js`.
+7. Set `enabled` to `true`.
+
+The browser config must use the public anon key only. Supabase anon keys are designed to be public when RLS is configured correctly; service-role keys must never be committed or used in browser code.
+
+## Current Site Behaviour
+
+`team.html` tries Supabase first when it is configured. If Supabase is not configured or unavailable, the page falls back to the existing Google Sheet/static fallback data.
+
+`admin/index.html` requires Supabase to be configured and requires an authenticated admin user. It can create, edit, publish, unpublish, and delete team profiles and staff resources.
