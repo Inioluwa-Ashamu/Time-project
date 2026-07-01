@@ -107,6 +107,7 @@ const htmlPages = fs.readdirSync(root)
 
     const hubPage = await context.newPage();
     await hubPage.addInitScript(() => {
+        const supportWorkerPasswordHash = "b03ae420e342195770900e49fd6ff0f2f3d266b631075c7dc57c87782625a3c3";
         const staffResources = [
             {
                 id: "staff-resource-smoke-test",
@@ -131,7 +132,14 @@ const htmlPages = fs.readdirSync(root)
                 sort_order: 20
             }
         ];
-        const query = {
+        const siteSettings = [
+            {
+                key: "support_worker_password_hash",
+                value: supportWorkerPasswordHash,
+                is_public: true
+            }
+        ];
+        const makeQuery = (data) => ({
             select() {
                 return this;
             },
@@ -144,15 +152,26 @@ const htmlPages = fs.readdirSync(root)
             order() {
                 return this;
             },
+            limit() {
+                return this;
+            },
             then(resolve) {
-                return Promise.resolve({ data: staffResources, error: null }).then(resolve);
+                return Promise.resolve({ data, error: null }).then(resolve);
             }
-        };
+        });
         window.supabase = {
             createClient() {
                 return {
                     from(tableName) {
-                        return tableName === "staff_resources" ? query : null;
+                        if (tableName === "staff_resources") {
+                            return makeQuery(staffResources);
+                        }
+
+                        if (tableName === "site_settings") {
+                            return makeQuery(siteSettings);
+                        }
+
+                        return makeQuery([]);
                     }
                 };
             }

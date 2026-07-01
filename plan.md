@@ -16,7 +16,8 @@ The static site renders well across public pages, mobile screenshots pass withou
 - Phase 4 - Complete Team Directory Fallback: implemented on 2026-07-01.
 - Phase 5 - E-learning Reliability: pending.
 - Phase 6 - External Links And Policy Documents: implemented on 2026-07-01.
-- Phase 7 onward: pending.
+- Phase 7 - Security, Access, And Privacy Review: implemented on 2026-07-01.
+- Phase 8 onward: pending.
 
 ## Definition Of Done
 
@@ -256,8 +257,8 @@ Make sure access controls and handover expectations are explicit.
   - Netlify Basic Auth in `netlify.toml`.
   - Client-side SHA-256 hash in `script.js`.
 - Decide whether Support Worker Hub access should remain developer-managed or become office-admin-managed.
-- If office-admin-managed, replace the code-managed shared password with a proper access model, such as Supabase Auth, Netlify Identity, or a server-side password validation flow.
-- Review whether staff pages need stronger access control than Basic Auth.
+- Implemented as an office-admin-managed Support Worker Hub password hash in Supabase `site_settings`, editable from `admin/index.html`.
+- Netlify Basic Auth remains deployment-managed in `netlify.toml`; changing it still requires a developer or deployment owner.
 - Confirm Supabase RLS policies match the selected staff resource model.
 - Keep service-role keys out of frontend code and committed files.
 - Add a short privacy/admin note explaining what data is stored in Supabase.

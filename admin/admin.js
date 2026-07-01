@@ -19,9 +19,16 @@ const resourcesRefresh = document.querySelector("#resources-refresh");
 const resourceReset = document.querySelector("#staff-resource-reset");
 const resourceFormError = document.querySelector("#resource-form-error");
 
+const hubPasswordForm = document.querySelector("#support-hub-password-form");
+const hubPasswordRefresh = document.querySelector("#support-hub-password-refresh");
+const hubPasswordStatus = document.querySelector("#support-hub-password-status");
+const hubPasswordError = document.querySelector("#support-hub-password-error");
+
 let supabaseClient = null;
 let teamProfiles = [];
 let staffResources = [];
+
+const supportHubPasswordSettingKey = "support_worker_password_hash";
 
 const escapeHtml = (value) =>
     String(value || "")
@@ -47,6 +54,14 @@ const clearError = (element) => {
 
     element.textContent = "";
     element.hidden = true;
+};
+
+const hashValue = async (value) => {
+    const encodedValue = new TextEncoder().encode(value);
+    const digest = await crypto.subtle.digest("SHA-256", encodedValue);
+    return Array.from(new Uint8Array(digest))
+        .map((byte) => byte.toString(16).padStart(2, "0"))
+        .join("");
 };
 
 const isSupabaseConfigured = () => {
@@ -123,7 +138,7 @@ const setAuthedState = async (session) => {
         loginSection.hidden = true;
         appSection.hidden = false;
         sessionLabel.textContent = session.user.email || "Admin dashboard";
-        await Promise.all([loadTeamProfiles(), loadStaffResources()]);
+        await Promise.all([loadTeamProfiles(), loadStaffResources(), loadAccessSettings()]);
     } catch (error) {
         showError(loginError, `Admin check failed: ${error.message}`);
         appSection.hidden = true;
@@ -411,6 +426,99 @@ const deleteStaffResource = async (resourceId) => {
     await loadStaffResources();
 };
 
+const formatSettingDate = (value) => {
+    if (!value) {
+        return "not recorded";
+    }
+
+    try {
+        return new Intl.DateTimeFormat("en-GB", {
+            dateStyle: "medium",
+            timeStyle: "short"
+        }).format(new Date(value));
+    } catch (error) {
+        return value;
+    }
+};
+
+const loadAccessSettings = async () => {
+    if (!hubPasswordStatus) {
+        return;
+    }
+
+    clearError(hubPasswordError);
+
+    const { data, error } = await getClient()
+        .from("site_settings")
+        .select("key, value, description, is_public, updated_at")
+        .eq("key", supportHubPasswordSettingKey)
+        .limit(1);
+
+    if (error) {
+        hubPasswordStatus.textContent = "Unable to load the current hub password setting.";
+        showError(hubPasswordError, error.message);
+        return;
+    }
+
+    const setting = Array.isArray(data) ? data[0] : null;
+
+    if (!setting) {
+        hubPasswordStatus.textContent = "No hub password setting exists yet. Save a new password to create it.";
+        return;
+    }
+
+    const visibility = setting.is_public ? "readable by the public hub page" : "admin-only";
+    const hashPreview = `${setting.value.slice(0, 8)}...${setting.value.slice(-8)}`;
+    hubPasswordStatus.textContent = `Configured (${visibility}). Last updated ${formatSettingDate(setting.updated_at)}. Hash ${hashPreview}.`;
+};
+
+const saveHubPassword = async (event) => {
+    event.preventDefault();
+    clearError(hubPasswordError);
+
+    const passwordInput = document.querySelector("#support-hub-password");
+    const confirmInput = document.querySelector("#support-hub-password-confirm");
+    const newPassword = passwordInput.value;
+    const confirmPassword = confirmInput.value;
+
+    if (newPassword.length < 12) {
+        showError(hubPasswordError, "Use at least 12 characters for the hub password.");
+        passwordInput.focus();
+        return;
+    }
+
+    if (newPassword !== confirmPassword) {
+        showError(hubPasswordError, "The two password fields do not match.");
+        confirmInput.focus();
+        return;
+    }
+
+    try {
+        const passwordHash = await hashValue(newPassword);
+        const { data } = await getClient().auth.getSession();
+        const payload = {
+            key: supportHubPasswordSettingKey,
+            value: passwordHash,
+            description: "SHA-256 hash used by support-workers.html for the Support Worker Hub unlock password.",
+            is_public: true,
+            updated_by: data.session?.user?.id || null
+        };
+        const { error } = await getClient()
+            .from("site_settings")
+            .upsert(payload, { onConflict: "key" });
+
+        if (error) {
+            throw error;
+        }
+
+        hubPasswordForm.reset();
+        hubPasswordStatus.textContent = "Hub password saved. Share the new password through Time's approved staff channel.";
+        await loadAccessSettings();
+    } catch (error) {
+        showError(hubPasswordError, error.message);
+    }
+};
+
 const initTabs = () => {
     document.querySelectorAll("[data-admin-tab]").forEach((tab) => {
         tab.addEventListener("click", () => {
@@ -420,8 +528,9 @@ const initTabs = () => {
                 button.classList.toggle("is-active", isActive);
                 button.setAttribute("aria-selected", String(isActive));
             });
-            document.querySelector("#panel-team").hidden = activeTab !== "team";
-            document.querySelector("#panel-resources").hidden = activeTab !== "resources";
+            document.querySelectorAll("[data-admin-panel]").forEach((panel) => {
+                panel.hidden = panel.dataset.adminPanel !== activeTab;
+            });
         });
     });
 };
@@ -490,6 +599,14 @@ resourceList.addEventListener("click", (event) => {
         deleteStaffResource(deleteButton.dataset.deleteResource);
     }
 });
+
+if (hubPasswordForm) {
+    hubPasswordForm.addEventListener("submit", saveHubPassword);
+}
+
+if (hubPasswordRefresh) {
+    hubPasswordRefresh.addEventListener("click", loadAccessSettings);
+}
 
 initTabs();
 initAdmin();

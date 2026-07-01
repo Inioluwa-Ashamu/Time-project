@@ -31,7 +31,7 @@
                 <div class="container">
                     <p class="eyebrow">Website admin</p>
                     <h1>Content management.</h1>
-                    <p class="lead">Manage team profiles and staff/support-worker directory content from Supabase.</p>
+                    <p class="lead">Manage team profiles, staff resources, and Support Worker Hub access from Supabase.</p>
                 </div>
             </section>
 
@@ -79,9 +79,10 @@
                     <div class="admin-tabs" role="tablist" aria-label="Admin content areas">
                         <button class="admin-tab is-active" id="tab-team" type="button" role="tab" aria-selected="true" aria-controls="panel-team" data-admin-tab="team">Team profiles</button>
                         <button class="admin-tab" id="tab-resources" type="button" role="tab" aria-selected="false" aria-controls="panel-resources" data-admin-tab="resources">Staff resources</button>
+                        <button class="admin-tab" id="tab-access" type="button" role="tab" aria-selected="false" aria-controls="panel-access" data-admin-tab="access">Access</button>
                     </div>
 
-                    <section class="admin-tab-panel" id="panel-team" role="tabpanel" aria-labelledby="tab-team">
+                    <section class="admin-tab-panel" id="panel-team" role="tabpanel" aria-labelledby="tab-team" data-admin-panel="team">
                         <div class="admin-grid">
                             <form class="admin-panel admin-form" id="team-profile-form">
                                 <input type="hidden" id="team-profile-id">
@@ -156,7 +157,7 @@
                         </div>
                     </section>
 
-                    <section class="admin-tab-panel" id="panel-resources" role="tabpanel" aria-labelledby="tab-resources" hidden>
+                    <section class="admin-tab-panel" id="panel-resources" role="tabpanel" aria-labelledby="tab-resources" data-admin-panel="resources" hidden>
                         <div class="admin-grid">
                             <form class="admin-panel admin-form" id="staff-resource-form">
                                 <input type="hidden" id="staff-resource-id">
@@ -236,6 +237,44 @@
                                         </thead>
                                         <tbody id="staff-resource-list"></tbody>
                                     </table>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <section class="admin-tab-panel" id="panel-access" role="tabpanel" aria-labelledby="tab-access" data-admin-panel="access" hidden>
+                        <div class="admin-grid">
+                            <form class="admin-panel admin-form" id="support-hub-password-form">
+                                <div class="admin-form-heading">
+                                    <div>
+                                        <p class="section-tag">Worker hub access</p>
+                                        <h3>Change hub password</h3>
+                                    </div>
+                                </div>
+                                <p class="section-intro">This changes the password checked by the Support Worker Hub page. Netlify Basic Auth is a separate deployment-level gate.</p>
+                                <label class="form-field" for="support-hub-password">
+                                    <span>New hub password</span>
+                                    <input id="support-hub-password" type="password" autocomplete="new-password" minlength="12" required>
+                                </label>
+                                <label class="form-field" for="support-hub-password-confirm">
+                                    <span>Confirm new password</span>
+                                    <input id="support-hub-password-confirm" type="password" autocomplete="new-password" minlength="12" required>
+                                </label>
+                                <p class="form-error" id="support-hub-password-error" hidden></p>
+                                <button class="button button-primary" type="submit">Save hub password</button>
+                            </form>
+
+                            <div class="admin-panel">
+                                <div class="admin-list-heading">
+                                    <div>
+                                        <p class="section-tag">Current setting</p>
+                                        <h3>Support Worker Hub</h3>
+                                    </div>
+                                    <button class="button button-secondary" id="support-hub-password-refresh" type="button">Refresh</button>
+                                </div>
+                                <p class="admin-status" id="support-hub-password-status">Loading password setting...</p>
+                                <div class="admin-note">
+                                    <p>The plain password is never stored here. The admin dashboard stores a SHA-256 hash in Supabase and the hub page checks the entered password against that hash.</p>
                                 </div>
                             </div>
                         </div>

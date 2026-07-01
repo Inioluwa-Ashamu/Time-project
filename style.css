@@ -2167,6 +2167,20 @@ h3 {
     object-fit: cover;
 }
 
+.admin-status,
+.admin-note {
+    color: #315143;
+}
+
+.admin-note {
+    margin-top: 1rem;
+    padding: 0.85rem;
+    border: 1px solid rgba(35, 60, 48, 0.12);
+    border-radius: 8px;
+    background: #f4f7ef;
+    font-size: 0.94rem;
+}
+
 .admin-table-wrap {
     overflow-x: auto;
 }

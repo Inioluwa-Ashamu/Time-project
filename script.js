@@ -400,6 +400,27 @@ const fetchSupabaseStaffResources = async () => {
     return data || [];
 };
 
+const fetchSupportWorkerPasswordHash = async () => {
+    const client = createSupabaseBrowserClient();
+
+    if (!client) {
+        return "";
+    }
+
+    const { data, error } = await client
+        .from("site_settings")
+        .select("value")
+        .eq("key", "support_worker_password_hash")
+        .eq("is_public", true)
+        .limit(1);
+
+    if (error) {
+        throw error;
+    }
+
+    return Array.isArray(data) && data[0] ? data[0].value : "";
+};
+
 const isExternalUrl = (url) => /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(String(url || ""));
 
 const shouldOpenResourceInNewTab = (url) => {
@@ -745,9 +766,25 @@ const initSupportWorkerHub = () => {
         return;
     }
 
-    const passwordHash = "b03ae420e342195770900e49fd6ff0f2f3d266b631075c7dc57c87782625a3c3";
+    const fallbackPasswordHash = "b03ae420e342195770900e49fd6ff0f2f3d266b631075c7dc57c87782625a3c3";
     const storageKey = "tssSupportWorkerHubUnlocked";
     let resourceLoadStarted = false;
+    let passwordHashPromise = null;
+
+    const isSha256Hash = (value) => /^[a-f0-9]{64}$/i.test(String(value || ""));
+
+    const getActivePasswordHash = async () => {
+        if (!passwordHashPromise) {
+            passwordHashPromise = fetchSupportWorkerPasswordHash()
+                .then((hash) => isSha256Hash(hash) ? hash : fallbackPasswordHash)
+                .catch((error) => {
+                    console.warn("Using fallback support worker password hash:", error);
+                    return fallbackPasswordHash;
+                });
+        }
+
+        return passwordHashPromise;
+    };
 
     const hashPassword = async (value) => {
         const encodedValue = new TextEncoder().encode(value);
@@ -828,18 +865,24 @@ const initSupportWorkerHub = () => {
         unlockHub();
     }
 
+    getActivePasswordHash();
+
     loginForm.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         let enteredHash = "";
+        let activePasswordHash = fallbackPasswordHash;
 
         try {
-            enteredHash = await hashPassword(passwordInput.value);
+            [enteredHash, activePasswordHash] = await Promise.all([
+                hashPassword(passwordInput.value),
+                getActivePasswordHash()
+            ]);
         } catch (error) {
             enteredHash = "";
         }
 
-        if (enteredHash === passwordHash) {
+        if (enteredHash === activePasswordHash) {
             if (errorMessage) {
                 errorMessage.hidden = true;
             }

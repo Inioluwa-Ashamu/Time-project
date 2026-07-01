@@ -32,11 +32,27 @@ Support worker resources are managed in Supabase `staff_resources` through `admi
 
 The hard-coded resource sections in `support-workers.html` are the static fallback if Supabase is not configured, unavailable, or has no published staff resources. Keep those fallback links grouped by purpose: safeguarding, session forms, planning, admin, training, and reference material. WordPress-hosted support worker documents have been copied into `assets/documents/support-workers/`; use local links for new resources where possible.
 
-Private/staff access model: the Support Worker Hub is protected by Netlify Basic Auth and the client-side hub password. Supabase RLS deliberately allows anonymous browser reads of `published` staff resources with `visibility = 'staff'` or `visibility = 'public'` so the static site can render admin-managed resources after that gate. `admin_users` and all admin writes remain restricted to authenticated allow-listed admins.
+Private/staff access model: the Support Worker Hub is protected by Netlify Basic Auth and the hub password. Office admins can change the hub password in `admin/index.html` under the Access tab; the dashboard stores only a SHA-256 hash in Supabase `site_settings`. Supabase RLS deliberately allows anonymous browser reads of the public `support_worker_password_hash` setting and `published` staff resources with `visibility = 'staff'` or `visibility = 'public'` so the static site can render admin-managed resources after the gate. `admin_users`, admin-only settings, and all admin writes remain restricted to authenticated allow-listed admins.
+
+Netlify Basic Auth is a separate deployment-level gate configured in `netlify.toml` for the worker and e-learning pages. It cannot be changed from the browser admin dashboard. If Time wants one office-managed password only, remove or replace Basic Auth as a later deployment decision; otherwise treat Basic Auth as a deployment-owner password and the hub password as the office-admin-managed worker password.
 
 ## Supabase Admin
 
 The team directory can read published public profiles from Supabase before falling back to the Google Sheet/static data in `team-data.js`. Backend setup lives in `supabase/schema.sql` and `supabase/README.md`. Browser code uses only the Supabase publishable key in `assets/js/supabase-config.js`; never add a secret/service-role key to frontend code. The admin dashboard is at `admin/index.html` and requires Supabase Auth plus an `admin_users` allow-list row.
+
+Supabase stores public team profile content, staff resource links, profile image references, the admin allow-list, and the Support Worker Hub password hash. It does not store the plain hub password.
+
+## Password Rotation
+
+To change the Support Worker Hub password:
+
+1. Sign in to `admin/index.html` with an allow-listed office admin account.
+2. Open the Access tab.
+3. Enter and confirm the new hub password.
+4. Save, then open `support-workers.html` in a fresh browser session and confirm the new password unlocks the hub.
+5. Share the new password only through Time's approved staff channel.
+
+If the deployed site still uses Netlify Basic Auth and that outer password also needs to rotate, a developer or deployment owner must update the `Basic-Auth` values in `netlify.toml` and redeploy. The browser admin dashboard changes the Support Worker Hub password hash in Supabase; it does not edit Netlify deployment configuration.
 
 ## Contact Form
 
