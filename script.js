@@ -428,10 +428,62 @@ const shouldOpenResourceInNewTab = (url) => {
     return isExternalUrl(resourceUrl) || !/\.html(?:#.*)?$/i.test(resourceUrl);
 };
 
+const supportResourceSections = {
+    Community: {
+        order: 10,
+        heading: "Support worker community",
+        intro: "Shared staff links and communication spaces."
+    },
+    Safeguarding: {
+        order: 20,
+        heading: "Safeguarding documents",
+        intro: "Core guidance and forms for recognising and reporting concerns."
+    },
+    "Session forms": {
+        order: 30,
+        heading: "Incident and feedback forms",
+        intro: "Forms for reporting incidents, trial sessions, and one-minute feedback."
+    },
+    Planning: {
+        order: 40,
+        heading: "Activities and community access",
+        intro: "Useful links for planning sessions and finding accessible places."
+    },
+    Admin: {
+        order: 50,
+        heading: "Admin, pay, and systems",
+        intro: "Booking, expenses, coding, holiday pay, and internal checklists."
+    },
+    Training: {
+        order: 60,
+        heading: "E-learning and practice guidance",
+        intro: "Training modules, CADS guidance, first aid, epilepsy, communication, and PBS resources."
+    },
+    Reference: {
+        order: 70,
+        heading: "Detailed autism and behaviour resources",
+        intro: "Longer reference documents for autism, communication, sensory needs, and behaviour support."
+    },
+    "Visual support": {
+        order: 80,
+        heading: "How to use visual support on sessions",
+        intro: "Video guidance restored from the original worker resources."
+    }
+};
+
+const getSupportResourceSectionMeta = (section) =>
+    supportResourceSections[section] || {
+        order: 1000,
+        heading: section || "General",
+        intro: ""
+    };
+
 const renderSupportResourceSections = (resources) => {
     const orderedResources = resources
         .slice()
         .sort((first, second) =>
+            getSupportResourceSectionMeta(first.section || "General").order -
+                getSupportResourceSectionMeta(second.section || "General").order ||
             String(first.section || "General").localeCompare(String(second.section || "General")) ||
             Number(first.sort_order || 1000) - Number(second.sort_order || 1000) ||
             String(first.title || "").localeCompare(String(second.title || ""))
@@ -450,9 +502,16 @@ const renderSupportResourceSections = (resources) => {
         .map(([section, sectionResources]) => `
             <article class="resource-section" data-resource-card>
                 <div>
+                    ${(() => {
+                        const meta = getSupportResourceSectionMeta(section);
+                        const intro = meta.intro || sectionResources.find((resource) => resource.description)?.description || "";
+
+                        return `
                     <p class="section-tag">${escapeHtml(section)}</p>
-                    <h2>${escapeHtml(section)}</h2>
-                    <p class="section-intro">${sectionResources.length === 1 ? "1 published resource." : `${sectionResources.length} published resources.`}</p>
+                    <h2>${escapeHtml(meta.heading)}</h2>
+                    <p class="section-intro">${escapeHtml(intro)}</p>
+                        `;
+                    })()}
                 </div>
                 <div class="resource-list">
                     ${sectionResources
