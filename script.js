@@ -284,34 +284,6 @@ const escapeHtml = (value) =>
         .replaceAll('"', "&quot;")
         .replaceAll("'", "&#39;");
 
-const initLazyEmbeds = () => {
-    document.querySelectorAll("[data-lazy-embed]").forEach((embed) => {
-        const loadButton = embed.querySelector(".embed-load-button");
-
-        if (!loadButton) {
-            return;
-        }
-
-        loadButton.addEventListener(
-            "click",
-            () => {
-                const iframe = document.createElement("iframe");
-                iframe.title = embed.dataset.embedTitle || "Training media";
-                iframe.src = embed.dataset.embedSrc || "";
-                iframe.loading = "lazy";
-                iframe.allowFullscreen = true;
-                iframe.referrerPolicy = "strict-origin-when-cross-origin";
-
-                embed.replaceChildren(iframe);
-                embed.classList.add("is-loaded");
-            },
-            { once: true }
-        );
-    });
-};
-
-initLazyEmbeds();
-
 initEnquiryAssistant();
 
 const getInitials = (name) =>
