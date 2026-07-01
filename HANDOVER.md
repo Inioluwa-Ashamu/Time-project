@@ -222,6 +222,15 @@ npm run check:external
 npm run screenshots:mobile
 ```
 
+Latest local verification on 2026-07-01:
+
+- `npm install` completed with 0 vulnerabilities.
+- `npm test` passed. Playwright needed permission to launch Chromium outside the local sandbox.
+- `python3 -m http.server 8765 --bind 127.0.0.1` served the site for screenshot verification.
+- `npm run screenshots:mobile` completed with no reported HTTP or horizontal-overflow issues.
+- `node scripts/generate-supabase-imports.js --image-mode=storage` completed without leaving generated import diffs.
+- `git status --short` was clean after removing verification-only screenshot and `node_modules` metadata changes.
+
 Manual checks:
 
 - Open home, services, team, contact, support worker hub, e-learning module library, and admin login.
@@ -235,6 +244,8 @@ Manual checks:
 - Submit a safe contact form test after deployment.
 - Confirm deployed staff pages require Netlify Basic Auth.
 - Confirm old WordPress-style redirects and the 404 route work on Netlify.
+
+The deployed contact-form, real admin CRUD, staff Basic Auth, deployed redirects, and deployed 404 checks require live mailbox access, staff credentials, and an allow-listed Supabase admin account. Treat those as release-owner checks; they cannot be proven from a repo-only local run.
 
 `npm test` runs:
 

@@ -18,7 +18,8 @@ The static site renders well across public pages, mobile screenshots pass withou
 - Phase 6 - External Links And Policy Documents: implemented on 2026-07-01.
 - Phase 7 - Security, Access, And Privacy Review: implemented on 2026-07-01.
 - Phase 8 - Handover Documentation: implemented on 2026-07-01.
-- Phase 9 onward: pending.
+- Phase 9 - Final Verification: automated/local verification completed on 2026-07-01; deployed credentialed checks remain release-owner tasks.
+- Phase 10 onward: pending.
 
 ## Definition Of Done
 
@@ -314,6 +315,24 @@ Turn the current handover notes into an operator-ready document.
 - Known caveats are explicit rather than hidden in code.
 
 ## Phase 9 - Final Verification
+
+### Status
+
+Automated and local verification completed on 2026-07-01:
+
+- `npm install` completed with 0 vulnerabilities.
+- `npm test` passed after allowing Playwright Chromium to launch outside the local sandbox.
+- `python3 -m http.server 8765 --bind 127.0.0.1` served the site for screenshot verification.
+- `npm run screenshots:mobile` completed and reported no HTTP or horizontal-overflow issues.
+- `node scripts/generate-supabase-imports.js --image-mode=storage` completed without leaving generated import diffs.
+- `git status --short` was clean after removing verification-only regenerated screenshots and local `node_modules` metadata.
+
+Deployment-only manual checks still require the live deployment owner, mailbox access, staff Basic Auth credentials, and an allow-listed Supabase admin account:
+
+- Submit a safe test contact form after deployment and confirm mailbox receipt.
+- Log in to admin with an allow-listed account, create a draft profile, and test publish/unpublish behaviour against the public team page.
+- Confirm staff page Basic Auth works on deployed Netlify.
+- Confirm Netlify 404 handling and old WordPress redirects on the deployed domain.
 
 ### Commands
 
