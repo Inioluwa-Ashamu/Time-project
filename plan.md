@@ -12,7 +12,9 @@ The static site renders well across public pages, mobile screenshots pass withou
 
 - Phase 1 - Repository Cleanup And Baseline: implemented on 2026-07-01.
 - Phase 2 - Real Test And QA Commands: implemented on 2026-07-01.
-- Phase 3 onward: pending.
+- Phase 3 - Support Worker Resources CMS Decision: implemented on 2026-07-01.
+- Phase 4 - Complete Team Directory Fallback: implemented on 2026-07-01.
+- Phase 5 onward: pending.
 
 ## Definition Of Done
 

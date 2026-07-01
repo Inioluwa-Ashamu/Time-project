@@ -107,11 +107,12 @@ using (public.is_admin())
 with check (public.is_admin());
 
 drop policy if exists "Published public resources are readable" on public.staff_resources;
-create policy "Published public resources are readable"
+drop policy if exists "Published staff hub resources are readable" on public.staff_resources;
+create policy "Published staff hub resources are readable"
 on public.staff_resources
 for select
 to anon, authenticated
-using (published and visibility = 'public');
+using (published and visibility in ('public', 'staff'));
 
 drop policy if exists "Admins can manage staff resources" on public.staff_resources;
 create policy "Admins can manage staff resources"

@@ -46,3 +46,13 @@ node scripts/generate-supabase-imports.js --image-mode=storage
 ```
 
 In storage mode, `team_profiles.csv` uses `image_path` values such as `team/Ally-e1487589049713.jpg` and leaves `image_url` blank. Do not commit the service-role key or put it in frontend code.
+
+## Static Team Fallback
+
+After updating the team CSV source and regenerating Supabase imports, also regenerate the local browser fallback:
+
+```sh
+npm run generate:team-data
+```
+
+This rewrites `team-data.js` with the full office and support-worker directory, using local image paths where matching files exist in `assets/images/team/`.

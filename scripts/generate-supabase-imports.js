@@ -194,6 +194,18 @@ const buildTeamProfiles = () => {
     });
 };
 
+const buildTeamDirectoryFallback = () => {
+    const rows = parseCsv(findFirstExistingFile(teamCsvCandidates));
+
+    return rows.map((row) => ({
+        name: row.name,
+        role: row.role || (row.team === "office" ? "Office Team" : "Support Worker"),
+        team: row.team === "office" ? "office" : "support",
+        image_url: localizeTeamImageUrl(row.image_url),
+        bio: row.bio
+    }));
+};
+
 const buildStaffResources = () => {
     const rows = parseCsv(path.join(root, "support-worker-resources.csv"));
 
@@ -210,38 +222,51 @@ const buildStaffResources = () => {
     }));
 };
 
-fs.mkdirSync(outputDir, { recursive: true });
+const generateSupabaseImports = () => {
+    fs.mkdirSync(outputDir, { recursive: true });
 
-writeCsv(
-    path.join(outputDir, "team_profiles.csv"),
-    [
-        "display_name",
-        "role",
-        "directory_group",
-        "bio",
-        "image_path",
-        "image_url",
-        "public_profile",
-        "published",
-        "sort_order"
-    ],
-    buildTeamProfiles()
-);
+    writeCsv(
+        path.join(outputDir, "team_profiles.csv"),
+        [
+            "display_name",
+            "role",
+            "directory_group",
+            "bio",
+            "image_path",
+            "image_url",
+            "public_profile",
+            "published",
+            "sort_order"
+        ],
+        buildTeamProfiles()
+    );
 
-writeCsv(
-    path.join(outputDir, "staff_resources.csv"),
-    [
-        "title",
-        "description",
-        "section",
-        "link_label",
-        "url",
-        "resource_type",
-        "visibility",
-        "published",
-        "sort_order"
-    ],
-    buildStaffResources()
-);
+    writeCsv(
+        path.join(outputDir, "staff_resources.csv"),
+        [
+            "title",
+            "description",
+            "section",
+            "link_label",
+            "url",
+            "resource_type",
+            "visibility",
+            "published",
+            "sort_order"
+        ],
+        buildStaffResources()
+    );
 
-console.log(`Wrote Supabase import CSVs to supabase/imports/ using ${imageMode} image mode.`);
+    console.log(`Wrote Supabase import CSVs to supabase/imports/ using ${imageMode} image mode.`);
+};
+
+if (require.main === module) {
+    generateSupabaseImports();
+}
+
+module.exports = {
+    buildTeamDirectoryFallback,
+    buildTeamProfiles,
+    buildStaffResources,
+    generateSupabaseImports
+};

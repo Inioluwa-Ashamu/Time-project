@@ -15,11 +15,24 @@
 
 ## Updating Team Data
 
-The team page is driven by `team-data.js` and the CSV files in the repo. Keep names, roles, biographies, teams, and image URLs consistent. The JavaScript falls back to local data if a remote source is unavailable.
+The team page tries Supabase first, then the published Google Sheet CSV, then the local fallback in `team-data.js`. The fallback is generated from the same CSV source as the Supabase import files, so avoid hand-editing `team-data.js` unless it is an emergency hotfix.
+
+Normal update flow:
+
+1. Update `team-spreadsheet - time-team-directory-sheet.csv` or refresh `team-directory-google-sheet.csv` from the approved Google Sheet export.
+2. Run `node scripts/generate-supabase-imports.js --image-mode=storage`.
+3. Run `npm run generate:team-data`.
+4. Run `npm test` and verify `team.html`.
+
+The current local fallback contains 5 office profiles and 67 support-worker profiles. Local image paths are used where matching files exist in `assets/images/team/`.
 
 ## Updating Resources
 
-Support worker resources live in `support-workers.html`. Keep links grouped by purpose: safeguarding, session forms, planning, admin, training, and reference material. WordPress-hosted support worker documents have been copied into `assets/documents/support-workers/`; use local links for new resources where possible.
+Support worker resources are managed in Supabase `staff_resources` through `admin/index.html`. A published resource appears in `support-workers.html` after the hub is unlocked. Resources are grouped by `section` and ordered by `section`, `sort_order`, then `title`.
+
+The hard-coded resource sections in `support-workers.html` are the static fallback if Supabase is not configured, unavailable, or has no published staff resources. Keep those fallback links grouped by purpose: safeguarding, session forms, planning, admin, training, and reference material. WordPress-hosted support worker documents have been copied into `assets/documents/support-workers/`; use local links for new resources where possible.
+
+Private/staff access model: the Support Worker Hub is protected by Netlify Basic Auth and the client-side hub password. Supabase RLS deliberately allows anonymous browser reads of `published` staff resources with `visibility = 'staff'` or `visibility = 'public'` so the static site can render admin-managed resources after that gate. `admin_users` and all admin writes remain restricted to authenticated allow-listed admins.
 
 ## Supabase Admin
 
@@ -52,6 +65,12 @@ This runs:
 
 - `npm run check:local`: validates local HTML links, local assets, anchors, image alt text, public page metadata, and sitemap coverage.
 - `npm run check:browser`: loads the HTML pages in Playwright from local files, checks mobile overflow, verifies the team directory renders, checks the Support Worker Hub unlock flow, and confirms the admin page reaches either the login or configuration-warning state.
+
+To regenerate the full local team fallback from the team CSV source, run:
+
+```sh
+npm run generate:team-data
+```
 
 For visual mobile review, run:
 

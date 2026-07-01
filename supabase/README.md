@@ -13,7 +13,8 @@ This project now supports Supabase as the real content backend for team profiles
 
 - The public site uses only the Supabase publishable key.
 - Public reads are limited by RLS to `published = true` and `public_profile = true` for team profiles.
-- Public staff resource reads are limited to `published = true` and `visibility = 'public'`.
+- Staff resource reads are limited to `published = true` and `visibility in ('public', 'staff')`.
+- The Support Worker Hub remains the access gate for staff-only resources through Netlify Basic Auth and the hub password. The browser anon key can read published staff rows after that gate so admin-managed resources can render on the static site.
 - Admin reads/writes require Supabase Auth plus a matching row in `admin_users`.
 - Never expose a Supabase service-role key in frontend code or Netlify public variables.
 
@@ -32,5 +33,7 @@ The browser config must use the publishable key only. Publishable keys are desig
 ## Current Site Behaviour
 
 `team.html` tries Supabase first when it is configured. If Supabase is not configured or unavailable, the page falls back to the existing Google Sheet/static fallback data.
+
+`support-workers.html` unlocks locally, then tries to read published `staff_resources` from Supabase. If Supabase is not configured, unavailable, or empty, it keeps the static resource sections already in the page.
 
 `admin/index.html` requires Supabase to be configured and requires an authenticated admin user. It can create, edit, publish, unpublish, and delete team profiles and staff resources.

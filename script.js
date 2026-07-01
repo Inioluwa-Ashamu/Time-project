@@ -377,6 +377,86 @@ const fetchSupabaseTeamMembers = async () => {
     }));
 };
 
+const fetchSupabaseStaffResources = async () => {
+    const client = createSupabaseBrowserClient();
+
+    if (!client) {
+        return [];
+    }
+
+    const { data, error } = await client
+        .from("staff_resources")
+        .select("id, title, description, section, link_label, url, resource_type, visibility, sort_order")
+        .eq("published", true)
+        .in("visibility", ["public", "staff"])
+        .order("section", { ascending: true })
+        .order("sort_order", { ascending: true })
+        .order("title", { ascending: true });
+
+    if (error) {
+        throw error;
+    }
+
+    return data || [];
+};
+
+const isExternalUrl = (url) => /^(?:[a-z][a-z0-9+.-]*:|\/\/)/i.test(String(url || ""));
+
+const shouldOpenResourceInNewTab = (url) => {
+    const resourceUrl = String(url || "");
+    return isExternalUrl(resourceUrl) || !/\.html(?:#.*)?$/i.test(resourceUrl);
+};
+
+const renderSupportResourceSections = (resources) => {
+    const orderedResources = resources
+        .slice()
+        .sort((first, second) =>
+            String(first.section || "General").localeCompare(String(second.section || "General")) ||
+            Number(first.sort_order || 1000) - Number(second.sort_order || 1000) ||
+            String(first.title || "").localeCompare(String(second.title || ""))
+        );
+    const sectionMap = new Map();
+
+    orderedResources.forEach((resource) => {
+        const section = resource.section || "General";
+        if (!sectionMap.has(section)) {
+            sectionMap.set(section, []);
+        }
+        sectionMap.get(section).push(resource);
+    });
+
+    return [...sectionMap.entries()]
+        .map(([section, sectionResources]) => `
+            <article class="resource-section" data-resource-card>
+                <div>
+                    <p class="section-tag">${escapeHtml(section)}</p>
+                    <h2>${escapeHtml(section)}</h2>
+                    <p class="section-intro">${sectionResources.length === 1 ? "1 published resource." : `${sectionResources.length} published resources.`}</p>
+                </div>
+                <div class="resource-list">
+                    ${sectionResources
+                        .map((resource) => {
+                            const url = resource.url || "#";
+                            const targetAttrs = shouldOpenResourceInNewTab(url) ? ' target="_blank" rel="noopener noreferrer"' : "";
+                            const description = resource.description
+                                ? `<span class="resource-link-description">${escapeHtml(resource.description)}</span>`
+                                : "";
+                            const linkClass = description ? ' class="has-description"' : "";
+
+                            return `
+                                <a${linkClass} href="${escapeHtml(url)}"${targetAttrs}>
+                                    <span class="resource-link-title">${escapeHtml(resource.title || resource.link_label || "Open resource")}</span>
+                                    ${description}
+                                </a>
+                            `;
+                        })
+                        .join("")}
+                </div>
+            </article>
+        `)
+        .join("");
+};
+
 const parseCsvLine = (line) => {
     const values = [];
     let current = "";
@@ -658,8 +738,8 @@ const initSupportWorkerHub = () => {
     const errorMessage = document.querySelector("#support-worker-password-error");
     const lockButton = document.querySelector("#support-worker-lock-button");
     const resourceSearch = document.querySelector("#support-resource-search");
+    const resourceList = document.querySelector("#support-resource-list");
     const emptyState = document.querySelector("#support-resource-empty");
-    const resourceCards = Array.from(document.querySelectorAll("[data-resource-card]"));
 
     if (!lockSection || !contentSection || !loginForm || !passwordInput) {
         return;
@@ -667,6 +747,7 @@ const initSupportWorkerHub = () => {
 
     const passwordHash = "b03ae420e342195770900e49fd6ff0f2f3d266b631075c7dc57c87782625a3c3";
     const storageKey = "tssSupportWorkerHubUnlocked";
+    let resourceLoadStarted = false;
 
     const hashPassword = async (value) => {
         const encodedValue = new TextEncoder().encode(value);
@@ -676,10 +757,59 @@ const initSupportWorkerHub = () => {
             .join("");
     };
 
+    const runResourceSearch = () => {
+        if (!resourceSearch) {
+            return;
+        }
+
+        const searchTerm = resourceSearch.value.trim().toLowerCase();
+        const resourceCards = Array.from(document.querySelectorAll("[data-resource-card]"));
+        let visibleCount = 0;
+
+        resourceCards.forEach((card) => {
+            const isMatch = !searchTerm || card.textContent.toLowerCase().includes(searchTerm);
+            card.hidden = !isMatch;
+
+            if (isMatch) {
+                visibleCount += 1;
+            }
+        });
+
+        if (emptyState) {
+            emptyState.hidden = visibleCount !== 0;
+        }
+    };
+
+    const loadStaffResources = async () => {
+        if (resourceLoadStarted || !resourceList) {
+            return;
+        }
+
+        resourceLoadStarted = true;
+
+        try {
+            const resources = await fetchSupabaseStaffResources();
+            if (!resources.length) {
+                runResourceSearch();
+                return;
+            }
+
+            resourceList.innerHTML = renderSupportResourceSections(resources);
+            if (emptyState) {
+                resourceList.appendChild(emptyState);
+            }
+        } catch (error) {
+            console.warn("Using static support worker resources:", error);
+        }
+
+        runResourceSearch();
+    };
+
     const unlockHub = () => {
         lockSection.hidden = true;
         contentSection.hidden = false;
         sessionStorage.setItem(storageKey, "true");
+        loadStaffResources();
 
         if (resourceSearch) {
             resourceSearch.focus();
@@ -730,23 +860,7 @@ const initSupportWorkerHub = () => {
     }
 
     if (resourceSearch) {
-        resourceSearch.addEventListener("input", (event) => {
-            const searchTerm = event.target.value.trim().toLowerCase();
-            let visibleCount = 0;
-
-            resourceCards.forEach((card) => {
-                const isMatch = !searchTerm || card.textContent.toLowerCase().includes(searchTerm);
-                card.hidden = !isMatch;
-
-                if (isMatch) {
-                    visibleCount += 1;
-                }
-            });
-
-            if (emptyState) {
-                emptyState.hidden = visibleCount !== 0;
-            }
-        });
+        resourceSearch.addEventListener("input", runResourceSearch);
     }
 };
 
