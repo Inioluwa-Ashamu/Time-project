@@ -253,6 +253,8 @@ Make sure access controls and handover expectations are explicit.
 - Document where the password must be updated:
   - Netlify Basic Auth in `netlify.toml`.
   - Client-side SHA-256 hash in `script.js`.
+- Decide whether Support Worker Hub access should remain developer-managed or become office-admin-managed.
+- If office-admin-managed, replace the code-managed shared password with a proper access model, such as Supabase Auth, Netlify Identity, or a server-side password validation flow.
 - Review whether staff pages need stronger access control than Basic Auth.
 - Confirm Supabase RLS policies match the selected staff resource model.
 - Keep service-role keys out of frontend code and committed files.
@@ -270,6 +272,7 @@ Make sure access controls and handover expectations are explicit.
 ### Acceptance Criteria
 
 - Password update process is documented and tested.
+- The plan explicitly states whether future password/access changes require a developer or can be handled by an office admin.
 - Supabase anon key cannot read admin-only data.
 - Admin CRUD requires authenticated allow-listed user.
 - No service-role keys are committed.
