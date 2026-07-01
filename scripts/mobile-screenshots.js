@@ -35,8 +35,9 @@ const viewports = [
 ];
 
 const waitForPage = async (page) => {
-    await page.waitForLoadState("networkidle", { timeout: 10000 }).catch(() => {});
+    await page.waitForFunction(() => document.readyState !== "loading", null, { timeout: 10000 }).catch(() => {});
     await page.evaluate(() => document.fonts && document.fonts.ready).catch(() => {});
+    await page.waitForTimeout(120);
 };
 
 const prepareFullPage = async (page) => {
