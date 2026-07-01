@@ -40,6 +40,27 @@ The form asks users not to share unnecessary sensitive detail and links to `priv
 - `netlify.toml` includes security headers, old WordPress-style redirects, and a 404 route.
 - `404.html` handles missing pages.
 
+## QA Commands
+
+Run the core handover checks before publishing:
+
+```sh
+npm test
+```
+
+This runs:
+
+- `npm run check:local`: validates local HTML links, local assets, anchors, image alt text, public page metadata, and sitemap coverage.
+- `npm run check:browser`: loads the HTML pages in Playwright from local files, checks mobile overflow, verifies the team directory renders, checks the Support Worker Hub unlock flow, and confirms the admin page reaches either the login or configuration-warning state.
+
+For visual mobile review, run:
+
+```sh
+npm run screenshots:mobile
+```
+
+This rewrites PNG files in `screenshots/mobile/`; review those diffs before committing them.
+
 ## Future Improvements
 
 - Keep team image references local in `assets/images/team/` when updating `team-data.js` or the CSV source files.
