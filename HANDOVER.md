@@ -42,6 +42,8 @@ The team directory can read published public profiles from Supabase before falli
 
 The contact form posts to FormSubmit using `info@time-specialist-support.com`. The form redirects to `thank-you.html` and includes an autoresponse. Test the form after deployment because FormSubmit may require first-time email verification for the receiving address.
 
+FormSubmit endpoint status on 2026-07-01: `https://formsubmit.co/info@time-specialist-support.com` is reachable, but activation cannot be proven from the repository or a GET/HEAD request. After deployment, submit a safe test enquiry and confirm that the message arrives in the `info@time-specialist-support.com` mailbox. If FormSubmit sends an activation email, follow that email before treating the contact route as live.
+
 ## Privacy And Safeguarding
 
 The form asks users not to share unnecessary sensitive detail and links to `privacy.html`. Emergency and urgent safeguarding wording appears on the form, quick help assistant, FAQ, privacy page, and thank-you page.
@@ -65,6 +67,29 @@ This runs:
 
 - `npm run check:local`: validates local HTML links, local assets, anchors, image alt text, public page metadata, and sitemap coverage.
 - `npm run check:browser`: loads the HTML pages in Playwright from local files, checks mobile overflow, verifies the team directory renders, checks the Support Worker Hub unlock flow, and confirms the admin page reaches either the login or configuration-warning state.
+
+To check third-party links before a release, run:
+
+```sh
+npm run check:external
+```
+
+This command needs public internet access and is not part of `npm test`, because provider responses can vary and some sites block automated checks. The allow-list lives in `scripts/external-link-allowlist.json`. Keep allow-list entries specific and include a human-readable reason.
+
+The current external link report is in `external-link-report.md`. The latest networked run on 2026-07-01 found 113 passed links, 3 manual-verification links, 2 known-blocked links, and 0 failed links.
+
+Manual verification items:
+
+- Manchester Local Offer: `support-workers.html` now links directly to the current Manchester Service Directory Local Offer page. It was manually verified in browser on 2026-07-01, but automated checks can receive a Cloudflare challenge or `403`.
+- Support worker Facebook group: verify using an authorised Facebook account.
+- FormSubmit: submit a safe test enquiry after deployment and confirm mailbox receipt.
+
+Known blocked items:
+
+- Vimeo e-learning embed: `elearning-modules.html` still has a `player.vimeo.com` URL that returns `401` to automated checks. This is the broken Vimeo item already listed under Phase 5.
+- Apple App Store toilet-finder link: automated checks may receive `429`; verify manually if the app link remains a required worker resource.
+
+Policy document decision: keep Dropbox policy links external for now. They all passed the networked external-link check, and the filenames carry current version/date information. Move policy PDFs/documents into `assets/documents/` only if Time confirms Dropbox is no longer the source of truth and provides a replacement process for future policy updates.
 
 To regenerate the full local team fallback from the team CSV source, run:
 

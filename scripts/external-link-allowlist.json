@@ -1,0 +1,19 @@
+{
+  "entries": [
+    {
+      "url": "https://www.manchesterservicedirectory.co.uk/kb5/manchester/directory/localoffer.page?localofferchannel=0",
+      "status": "manual_verify",
+      "reason": "Manchester Service Directory serves the Local Offer page to browser users, but automated checks can receive a Cloudflare challenge or 403. Manually verified in browser on 2026-07-01."
+    },
+    {
+      "host": "www.facebook.com",
+      "status": "manual_verify",
+      "reason": "Facebook group pages may require login or show interstitials, so HTTP status alone does not prove staff can access the group."
+    },
+    {
+      "host": "formsubmit.co",
+      "status": "manual_verify",
+      "reason": "The FormSubmit endpoint is reachable, but activation can only be confirmed by submitting the deployed form and checking the receiving mailbox."
+    }
+  ]
+}
