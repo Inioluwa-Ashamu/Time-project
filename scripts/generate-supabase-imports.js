@@ -217,6 +217,7 @@ const buildStaffResources = () => {
         url: row.url,
         resource_type: inferResourceType(row.url),
         visibility: "staff",
+        quick_action: String(row.quick_action || "").toLowerCase() === "true" ? "true" : "false",
         published: "true",
         sort_order: 1000 + index * 10
     }));
@@ -251,6 +252,7 @@ const generateSupabaseImports = () => {
             "url",
             "resource_type",
             "visibility",
+            "quick_action",
             "published",
             "sort_order"
         ],

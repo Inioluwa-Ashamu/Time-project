@@ -1,6 +1,6 @@
 # Supabase Backend
 
-This project now supports Supabase as the real content backend for team profiles and staff/support-worker resource content.
+This project uses Supabase as the editable content backend for the static Time Specialist Support website. The public site remains static; Supabase supplies data to the browser through RLS-protected public reads and to the admin dashboard through authenticated admin reads/writes.
 
 ## What Supabase Stores
 
@@ -30,8 +30,63 @@ This project now supports Supabase as the real content backend for team profiles
 5. In Supabase Storage, confirm the `profile-images` bucket exists and is public.
 6. Fill in the project URL and publishable key in `assets/js/supabase-config.js`.
 7. Set `enabled` to `true`.
+8. Open `admin/index.html` and confirm the page reaches the login form.
 
 The browser config must use the publishable key only. Publishable keys are designed for browser/client-side use when RLS is configured correctly; secret/service-role keys must never be committed or used in browser code.
+
+Example browser config:
+
+```js
+window.tssSupabaseConfig = {
+    enabled: true,
+    url: "https://YOUR-PROJECT-REF.supabase.co",
+    publishableKey: "YOUR_PUBLISHABLE_KEY",
+    profileImageBucket: "profile-images"
+};
+```
+
+## Admin User Creation
+
+After creating the Auth user in Supabase, grant admin access with the snippet in `schema.sql`, replacing the email address:
+
+```sql
+insert into public.admin_users (user_id, email)
+select id, email
+from auth.users
+where email = 'admin@example.com'
+on conflict (user_id) do nothing;
+```
+
+The admin dashboard checks both Supabase Auth and this allow-list. A signed-in user without an `admin_users` row is signed out and cannot manage content.
+
+## Imports And Images
+
+Import CSVs are generated into `supabase/imports/`.
+
+```sh
+node scripts/generate-supabase-imports.js --image-mode=storage
+```
+
+Then import:
+
+- `supabase/imports/team_profiles.csv` into `team_profiles`.
+- `supabase/imports/staff_resources.csv` into `staff_resources`.
+
+For profile images, the preferred path is Supabase Storage. Use `.env` only for local maintenance scripts:
+
+```sh
+SUPABASE_URL=https://YOUR-PROJECT-REF.supabase.co
+SUPABASE_SERVICE_ROLE_KEY=YOUR_SERVICE_ROLE_KEY
+```
+
+Then run:
+
+```sh
+node scripts/upload-team-images-to-supabase.js
+node scripts/generate-supabase-imports.js --image-mode=storage
+```
+
+Do not commit `.env`, and do not put the service-role key in `assets/js/supabase-config.js`.
 
 ## Current Site Behaviour
 
@@ -40,3 +95,21 @@ The browser config must use the publishable key only. Publishable keys are desig
 `support-workers.html` unlocks locally, then tries to read published `staff_resources` from Supabase. If Supabase is not configured, unavailable, or empty, it keeps the static resource sections already in the page.
 
 `admin/index.html` requires Supabase to be configured and requires an authenticated admin user. It can create, edit, publish, unpublish, and delete team profiles and staff resources, and it can update the Support Worker Hub password hash.
+
+## Operational Checks
+
+After schema or config changes:
+
+```sh
+npm test
+```
+
+Manual checks:
+
+- `team.html` renders office and support-worker profiles.
+- `support-workers.html` unlocks and shows either Supabase resources or the static fallback.
+- `admin/index.html` reaches login when configured.
+- Anonymous browser users cannot read `admin_users`.
+- Admin CRUD works only for an authenticated allow-listed user.
+
+Known caveat: published staff resources are intentionally readable from the browser because the site is static and the staff gate happens before rendering. Do not publish content that requires server-side secrecy.

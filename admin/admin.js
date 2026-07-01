@@ -331,7 +331,7 @@ const loadStaffResources = async () => {
                 </td>
                 <td>${escapeHtml(resource.section)}</td>
                 <td>${escapeHtml(resource.visibility)}</td>
-                <td>${renderStatus(resource.published)}</td>
+                <td>${renderStatus(resource.published)}${resource.quick_action ? '<span class="admin-pill">Quick</span>' : ""}</td>
                 <td>
                     <div class="admin-row-actions">
                         <button type="button" class="text-link" data-edit-resource="${resource.id}">Edit</button>
@@ -350,6 +350,7 @@ const resetResourceForm = () => {
     document.querySelector("#resource-link-label").value = "Open resource";
     document.querySelector("#resource-sort-order").value = "1000";
     document.querySelector("#resource-published").checked = false;
+    document.querySelector("#resource-quick-action").checked = false;
     document.querySelector("#resource-form-title").textContent = "New staff resource";
     clearError(resourceFormError);
 };
@@ -371,6 +372,7 @@ const editStaffResource = (resourceId) => {
     document.querySelector("#resource-visibility").value = resource.visibility || "staff";
     document.querySelector("#resource-sort-order").value = resource.sort_order || 1000;
     document.querySelector("#resource-published").checked = Boolean(resource.published);
+    document.querySelector("#resource-quick-action").checked = Boolean(resource.quick_action);
     document.querySelector("#resource-form-title").textContent = `Edit ${resource.title}`;
     resourceForm.scrollIntoView({ behavior: "smooth", block: "start" });
 };
@@ -388,6 +390,7 @@ const saveStaffResource = async (event) => {
             url: document.querySelector("#resource-url").value.trim(),
             resource_type: document.querySelector("#resource-type").value,
             visibility: document.querySelector("#resource-visibility").value,
+            quick_action: document.querySelector("#resource-quick-action").checked,
             published: document.querySelector("#resource-published").checked,
             sort_order: Number(document.querySelector("#resource-sort-order").value || 1000)
         };

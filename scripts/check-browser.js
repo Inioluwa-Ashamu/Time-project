@@ -118,6 +118,7 @@ const htmlPages = fs.readdirSync(root)
                 url: "policies.html",
                 resource_type: "page",
                 visibility: "staff",
+                quick_action: true,
                 sort_order: 10
             },
             {
@@ -129,6 +130,7 @@ const htmlPages = fs.readdirSync(root)
                 url: "https://example.com/training",
                 resource_type: "video",
                 visibility: "staff",
+                quick_action: false,
                 sort_order: 20
             }
         ];
@@ -190,6 +192,13 @@ const htmlPages = fs.readdirSync(root)
         { timeout: 3000 }
     ).catch(() => {
         issues.push("support-workers.html: Supabase-rendered staff resource did not appear after unlock");
+    });
+    await hubPage.waitForFunction(
+        () => document.querySelector("#support-quick-links")?.textContent.includes("Smoke test staff handbook"),
+        null,
+        { timeout: 3000 }
+    ).catch(() => {
+        issues.push("support-workers.html: Supabase quick action did not replace static quick links");
     });
     await hubPage.fill("#support-resource-search", "training video");
     const hubSearchState = await hubPage.evaluate(() => ({

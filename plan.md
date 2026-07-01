@@ -17,7 +17,8 @@ The static site renders well across public pages, mobile screenshots pass withou
 - Phase 5 - E-learning Reliability: pending.
 - Phase 6 - External Links And Policy Documents: implemented on 2026-07-01.
 - Phase 7 - Security, Access, And Privacy Review: implemented on 2026-07-01.
-- Phase 8 onward: pending.
+- Phase 8 - Handover Documentation: implemented on 2026-07-01.
+- Phase 9 onward: pending.
 
 ## Definition Of Done
 

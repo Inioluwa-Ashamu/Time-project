@@ -386,7 +386,7 @@ const fetchSupabaseStaffResources = async () => {
 
     const { data, error } = await client
         .from("staff_resources")
-        .select("id, title, description, section, link_label, url, resource_type, visibility, sort_order")
+        .select("id, title, description, section, link_label, url, resource_type, visibility, quick_action, sort_order")
         .eq("published", true)
         .in("visibility", ["public", "staff"])
         .order("section", { ascending: true })
@@ -534,6 +534,52 @@ const renderSupportResourceSections = (resources) => {
                 </div>
             </article>
         `)
+        .join("");
+};
+
+const getQuickActionDescription = (resource) => {
+    const title = String(resource.title || "").toLowerCase();
+
+    if (title.includes("incident report")) {
+        return "Use this after an incident or concern.";
+    }
+
+    if (title.includes("one minute feedback")) {
+        return "Submit session feedback from your phone.";
+    }
+
+    if (title.includes("booking system")) {
+        return "Open the support worker booking system.";
+    }
+
+    if (title.includes("polic")) {
+        return "Read Time Specialist Support policies.";
+    }
+
+    return resource.description || resource.link_label || "Open this staff resource.";
+};
+
+const renderSupportQuickLinks = (resources) => {
+    const quickResources = resources
+        .filter((resource) => resource.quick_action)
+        .slice()
+        .sort((first, second) =>
+            Number(first.sort_order || 1000) - Number(second.sort_order || 1000) ||
+            String(first.title || "").localeCompare(String(second.title || ""))
+        );
+
+    return quickResources
+        .map((resource) => {
+            const url = resource.url || "#";
+            const targetAttrs = shouldOpenResourceInNewTab(url) ? ' target="_blank" rel="noopener noreferrer"' : "";
+
+            return `
+                <a class="resource-card priority-resource" href="${escapeHtml(url)}"${targetAttrs} data-resource-card>
+                    <strong>${escapeHtml(resource.title || resource.link_label || "Open resource")}</strong>
+                    <span>${escapeHtml(getQuickActionDescription(resource))}</span>
+                </a>
+            `;
+        })
         .join("");
 };
 
@@ -818,6 +864,7 @@ const initSupportWorkerHub = () => {
     const errorMessage = document.querySelector("#support-worker-password-error");
     const lockButton = document.querySelector("#support-worker-lock-button");
     const resourceSearch = document.querySelector("#support-resource-search");
+    const quickLinks = document.querySelector("#support-quick-links");
     const resourceList = document.querySelector("#support-resource-list");
     const emptyState = document.querySelector("#support-resource-empty");
 
@@ -888,6 +935,12 @@ const initSupportWorkerHub = () => {
             if (!resources.length) {
                 runResourceSearch();
                 return;
+            }
+
+            if (quickLinks) {
+                const quickMarkup = renderSupportQuickLinks(resources);
+                quickLinks.innerHTML = quickMarkup;
+                quickLinks.hidden = !quickMarkup;
             }
 
             resourceList.innerHTML = renderSupportResourceSections(resources);

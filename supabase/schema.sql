@@ -52,11 +52,15 @@ create table if not exists public.staff_resources (
         check (resource_type in ('link', 'document', 'form', 'video', 'page')),
     visibility text not null default 'staff'
         check (visibility in ('public', 'staff')),
+    quick_action boolean not null default false,
     published boolean not null default false,
     sort_order integer not null default 1000,
     created_at timestamptz not null default now(),
     updated_at timestamptz not null default now()
 );
+
+alter table public.staff_resources
+add column if not exists quick_action boolean not null default false;
 
 create table if not exists public.site_settings (
     key text primary key,
@@ -201,6 +205,9 @@ on public.team_profiles (published, public_profile, directory_group, sort_order,
 
 create index if not exists staff_resources_public_idx
 on public.staff_resources (published, visibility, section, sort_order, title);
+
+create index if not exists staff_resources_quick_action_idx
+on public.staff_resources (published, visibility, quick_action, sort_order, title);
 
 create index if not exists site_settings_public_idx
 on public.site_settings (is_public, key);
