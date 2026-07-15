@@ -2,6 +2,14 @@ const configWarning = document.querySelector("#admin-config-warning");
 const loginSection = document.querySelector("#admin-login-section");
 const loginForm = document.querySelector("#admin-login-form");
 const loginError = document.querySelector("#admin-login-error");
+const loginSuccess = document.querySelector("#admin-login-success");
+const forgotPasswordButton = document.querySelector("#admin-forgot-password");
+const passwordSection = document.querySelector("#admin-password-section");
+const passwordForm = document.querySelector("#admin-password-form");
+const passwordTitle = document.querySelector("#admin-password-title");
+const passwordIntro = document.querySelector("#admin-password-intro");
+const passwordError = document.querySelector("#admin-password-error");
+const passwordSuccess = document.querySelector("#admin-password-success");
 const appSection = document.querySelector("#admin-app");
 const sessionLabel = document.querySelector("#admin-session-label");
 const signOutButton = document.querySelector("#admin-sign-out");
@@ -27,6 +35,8 @@ const hubPasswordError = document.querySelector("#support-hub-password-error");
 let supabaseClient = null;
 let teamProfiles = [];
 let staffResources = [];
+let passwordSetupRequired = false;
+let passwordSetupReason = "";
 
 const supportHubPasswordSettingKey = "support_worker_password_hash";
 
@@ -64,6 +74,24 @@ const hashValue = async (value) => {
         .join("");
 };
 
+const showSuccess = (element, message) => {
+    if (!element) {
+        return;
+    }
+
+    element.textContent = message;
+    element.hidden = false;
+};
+
+const clearSuccess = (element) => {
+    if (!element) {
+        return;
+    }
+
+    element.textContent = "";
+    element.hidden = true;
+};
+
 const isSupabaseConfigured = () => {
     const config = window.tssSupabaseConfig || {};
     const apiKey = config.publishableKey || config.anonKey || "";
@@ -90,6 +118,49 @@ const getClient = () => {
     }
 
     return supabaseClient;
+};
+
+const getAuthLinkType = () => {
+    const params = new URLSearchParams(window.location.search);
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    return params.get("type") || hash.get("type") || "";
+};
+
+const isPasswordSetupType = (type) => ["recovery", "invite"].includes(String(type).toLowerCase());
+
+const cleanAuthUrl = () => {
+    const url = new URL(window.location.href);
+    const authParams = [
+        "access_token",
+        "code",
+        "expires_at",
+        "expires_in",
+        "refresh_token",
+        "token_type",
+        "type"
+    ];
+
+    authParams.forEach((param) => url.searchParams.delete(param));
+    url.hash = "";
+    window.history.replaceState({}, document.title, url.toString());
+};
+
+const showPasswordSetup = (reason) => {
+    passwordSetupRequired = true;
+    passwordSetupReason = reason || passwordSetupReason || "setup";
+    appSection.hidden = true;
+    loginSection.hidden = true;
+    passwordSection.hidden = false;
+    clearError(passwordError);
+    clearSuccess(passwordSuccess);
+
+    if (passwordSetupReason === "recovery") {
+        passwordTitle.textContent = "Reset your password.";
+        passwordIntro.textContent = "Enter a new password for your website admin account.";
+    } else {
+        passwordTitle.textContent = "Set your password.";
+        passwordIntro.textContent = "Choose a password for your website admin account.";
+    }
 };
 
 const getImageUrl = (profile) => {
@@ -119,7 +190,13 @@ const checkAdminAccess = async () => {
 const setAuthedState = async (session) => {
     if (!session) {
         appSection.hidden = true;
+        passwordSection.hidden = true;
         loginSection.hidden = false;
+        return;
+    }
+
+    if (passwordSetupRequired) {
+        showPasswordSetup(passwordSetupReason);
         return;
     }
 
@@ -130,11 +207,14 @@ const setAuthedState = async (session) => {
             await getClient().auth.signOut();
             showError(loginError, "This account is signed in but is not listed as a website admin.");
             appSection.hidden = true;
+            passwordSection.hidden = true;
             loginSection.hidden = false;
             return;
         }
 
         clearError(loginError);
+        clearSuccess(loginSuccess);
+        passwordSection.hidden = true;
         loginSection.hidden = true;
         appSection.hidden = false;
         sessionLabel.textContent = session.user.email || "Admin dashboard";
@@ -142,6 +222,7 @@ const setAuthedState = async (session) => {
     } catch (error) {
         showError(loginError, `Admin check failed: ${error.message}`);
         appSection.hidden = true;
+        passwordSection.hidden = true;
         loginSection.hidden = false;
     }
 };
@@ -542,14 +623,33 @@ const initAdmin = async () => {
     if (!isSupabaseConfigured()) {
         configWarning.hidden = false;
         loginSection.hidden = true;
+        passwordSection.hidden = true;
         return;
     }
 
     const client = getClient();
+    const authLinkType = getAuthLinkType();
+    if (isPasswordSetupType(authLinkType)) {
+        passwordSetupRequired = true;
+        passwordSetupReason = authLinkType.toLowerCase();
+    }
+
     const { data } = await client.auth.getSession();
     await setAuthedState(data.session);
 
-    client.auth.onAuthStateChange((_event, session) => {
+    client.auth.onAuthStateChange((event, session) => {
+        if (event === "PASSWORD_RECOVERY") {
+            showPasswordSetup("recovery");
+            cleanAuthUrl();
+            return;
+        }
+
+        if (event === "SIGNED_IN" && isPasswordSetupType(getAuthLinkType())) {
+            showPasswordSetup(getAuthLinkType().toLowerCase());
+            cleanAuthUrl();
+            return;
+        }
+
         setAuthedState(session);
     });
 };
@@ -557,6 +657,7 @@ const initAdmin = async () => {
 loginForm.addEventListener("submit", async (event) => {
     event.preventDefault();
     clearError(loginError);
+    clearSuccess(loginSuccess);
 
     const email = document.querySelector("#admin-email").value.trim();
     const password = document.querySelector("#admin-password").value;
@@ -565,6 +666,64 @@ loginForm.addEventListener("submit", async (event) => {
     if (error) {
         showError(loginError, error.message);
     }
+});
+
+forgotPasswordButton.addEventListener("click", async () => {
+    clearError(loginError);
+    clearSuccess(loginSuccess);
+
+    const email = document.querySelector("#admin-email").value.trim();
+    if (!email) {
+        showError(loginError, "Enter your email address first, then request a reset link.");
+        document.querySelector("#admin-email").focus();
+        return;
+    }
+
+    const { error } = await getClient().auth.resetPasswordForEmail(email, {
+        redirectTo: new URL("index.html", window.location.href).toString()
+    });
+
+    if (error) {
+        showError(loginError, error.message);
+        return;
+    }
+
+    showSuccess(loginSuccess, "Password reset email sent. Use the link in that email to set a new password.");
+});
+
+passwordForm.addEventListener("submit", async (event) => {
+    event.preventDefault();
+    clearError(passwordError);
+    clearSuccess(passwordSuccess);
+
+    const password = document.querySelector("#admin-new-password").value;
+    const confirmPassword = document.querySelector("#admin-confirm-password").value;
+
+    if (password.length < 8) {
+        showError(passwordError, "Use at least 8 characters for the password.");
+        return;
+    }
+
+    if (password !== confirmPassword) {
+        showError(passwordError, "The passwords do not match.");
+        return;
+    }
+
+    const { error } = await getClient().auth.updateUser({ password });
+
+    if (error) {
+        showError(passwordError, error.message);
+        return;
+    }
+
+    passwordSetupRequired = false;
+    passwordSetupReason = "";
+    passwordForm.reset();
+    cleanAuthUrl();
+    showSuccess(passwordSuccess, "Password saved. Loading the admin dashboard...");
+
+    const { data } = await getClient().auth.getSession();
+    await setAuthedState(data.session);
 });
 
 signOutButton.addEventListener("click", () => {

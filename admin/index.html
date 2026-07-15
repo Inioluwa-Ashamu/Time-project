@@ -61,7 +61,32 @@
                             <input id="admin-password" type="password" autocomplete="current-password" required>
                         </label>
                         <p class="form-error" id="admin-login-error" hidden></p>
+                        <p class="form-success" id="admin-login-success" hidden></p>
                         <button class="button button-primary" type="submit">Sign in</button>
+                        <button class="text-link" id="admin-forgot-password" type="button">Send password reset email</button>
+                    </form>
+                </div>
+            </section>
+
+            <section class="section" id="admin-password-section" hidden>
+                <div class="container admin-layout">
+                    <form class="admin-panel admin-login-form" id="admin-password-form">
+                        <div>
+                            <p class="section-tag">Account setup</p>
+                            <h2 id="admin-password-title">Set your password.</h2>
+                            <p class="section-intro" id="admin-password-intro">Choose a password for your website admin account.</p>
+                        </div>
+                        <label class="form-field" for="admin-new-password">
+                            <span>New password</span>
+                            <input id="admin-new-password" type="password" autocomplete="new-password" minlength="8" required>
+                        </label>
+                        <label class="form-field" for="admin-confirm-password">
+                            <span>Confirm password</span>
+                            <input id="admin-confirm-password" type="password" autocomplete="new-password" minlength="8" required>
+                        </label>
+                        <p class="form-error" id="admin-password-error" hidden></p>
+                        <p class="form-success" id="admin-password-success" hidden></p>
+                        <button class="button button-primary" type="submit">Save password</button>
                     </form>
                 </div>
             </section>

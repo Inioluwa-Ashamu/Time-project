@@ -15,7 +15,7 @@ This project uses Supabase as the editable content backend for the static Time S
 - The public site uses only the Supabase publishable key.
 - Public reads are limited by RLS to `published = true` and `public_profile = true` for team profiles.
 - Staff resource reads are limited to `published = true` and `visibility in ('public', 'staff')`.
-- The Support Worker Hub remains the access gate for staff-only resources through Netlify Basic Auth and the hub password. The browser anon key can read published staff rows and the public `support_worker_password_hash` setting after that gate so admin-managed resources can render on the static site.
+- The Support Worker Hub remains the access gate for staff-only resources through Netlify Basic Auth and the hub password. The browser publishable key can read published staff rows and the public `support_worker_password_hash` setting after that gate so admin-managed resources can render on the static site.
 - Office admins can rotate the hub password in `admin/index.html`. Supabase stores the SHA-256 hash only; it does not store the plain password.
 - Netlify Basic Auth is deployment configuration in `netlify.toml` and still requires a developer or deployment owner to change.
 - Admin reads/writes require Supabase Auth plus a matching row in `admin_users`.
@@ -87,6 +87,15 @@ node scripts/generate-supabase-imports.js --image-mode=storage
 ```
 
 Do not commit `.env`, and do not put the service-role key in `assets/js/supabase-config.js`.
+
+## Auth Redirects
+
+Set Supabase Auth email redirect URLs for invites and password recovery to the deployed admin page:
+
+- Production: `https://YOUR-DOMAIN/admin/index.html`
+- Local testing: `http://localhost:PORT/admin/index.html`
+
+The admin page handles Supabase invite and recovery links by showing a password setup form, then it sends the new password to Supabase with the active recovery/invite session. After the password is saved, the page checks the `admin_users` allow-list before showing content management.
 
 ## Current Site Behaviour
 
