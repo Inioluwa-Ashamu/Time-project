@@ -672,22 +672,22 @@ const renderTeamCard = (member, variant = "support") => {
         : "";
 
     return `
-        <article class="${cardClass}">
-            <div class="staff-photo-wrap">
-                ${imageMarkup}
-                <div class="staff-photo-fallback" aria-hidden="true">${escapeHtml(getInitials(member.name))}</div>
-                <div class="staff-tile-caption">
-                    <h3 class="staff-name">${escapeHtml(member.name)}</h3>
-                    <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
-                    <button class="text-link profile-toggle profile-toggle-caption" type="button" aria-expanded="false">View bio</button>
+        <article class="${cardClass}" tabindex="0" role="button" aria-pressed="false" aria-label="${escapeHtml(member.name)} profile">
+            <div class="staff-flip-inner">
+                <div class="staff-tile-face staff-photo-wrap">
+                    ${imageMarkup}
+                    <div class="staff-photo-fallback" aria-hidden="true">${escapeHtml(getInitials(member.name))}</div>
+                    <div class="staff-tile-caption">
+                        <h3 class="staff-name">${escapeHtml(member.name)}</h3>
+                        <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
+                    </div>
                 </div>
-                <div class="staff-card-body">
+                <div class="staff-tile-face staff-card-body">
                     <div class="staff-card-header">
                         <h3 class="staff-name">${escapeHtml(member.name)}</h3>
                         <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
                     </div>
                     <p class="staff-bio">${escapeHtml(member.bio)}</p>
-                    <button class="text-link profile-toggle" type="button" aria-expanded="false">View bio</button>
                 </div>
             </div>
         </article>
@@ -842,21 +842,28 @@ const initTeamDirectory = async () => {
     }
 
     const toggleProfileCard = (event) => {
-        const toggle = event.target.closest(".profile-toggle");
-        if (!toggle) {
+        const card = event.target.closest(".staff-card");
+        if (!card) {
             return;
         }
 
-        const card = toggle.closest(".staff-card");
         const isExpanded = card.classList.toggle("is-expanded");
-        card.querySelectorAll(".profile-toggle").forEach((button) => {
-            button.setAttribute("aria-expanded", String(isExpanded));
-            button.textContent = isExpanded ? "Hide bio" : "View bio";
-        });
+        card.setAttribute("aria-pressed", String(isExpanded));
+    };
+
+    const toggleProfileCardWithKeyboard = (event) => {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        event.preventDefault();
+        toggleProfileCard(event);
     };
 
     officeDirectory.addEventListener("click", toggleProfileCard);
+    officeDirectory.addEventListener("keydown", toggleProfileCardWithKeyboard);
     supportDirectory.addEventListener("click", toggleProfileCard);
+    supportDirectory.addEventListener("keydown", toggleProfileCardWithKeyboard);
 };
 
 initTeamDirectory();

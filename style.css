@@ -865,7 +865,7 @@ h3 {
 .office-directory,
 .support-directory {
     display: grid;
-    gap: 1.25rem;
+    gap: 1rem;
 }
 
 .office-directory {
@@ -873,7 +873,7 @@ h3 {
 }
 
 .support-directory {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
 .value-grid {
@@ -1388,10 +1388,11 @@ h3 {
 .staff-card {
     min-width: 0;
     min-height: 100%;
-    overflow: hidden;
     padding: 0;
     border-radius: var(--radius-lg);
     background: #f8faf2;
+    cursor: pointer;
+    perspective: 1200px;
 }
 
 .office-card {
@@ -1406,22 +1407,37 @@ h3 {
     gap: 0.8rem;
 }
 
-.staff-photo-wrap {
+.staff-flip-inner {
     position: relative;
-    overflow: hidden;
+    width: 100%;
+    height: 100%;
     min-height: 100%;
+    border-radius: inherit;
+    aspect-ratio: 1 / 1.08;
+    transform-style: preserve-3d;
+    transition: transform 0.48s ease;
+}
+
+.office-card .staff-flip-inner {
+    aspect-ratio: 1 / 1.04;
+}
+
+.support-card .staff-flip-inner {
+    aspect-ratio: 1 / 1.08;
+}
+
+.staff-tile-face {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: inherit;
+    backface-visibility: hidden;
+}
+
+.staff-photo-wrap {
     background:
         linear-gradient(135deg, rgba(215, 191, 68, 0.16), transparent 48%),
         linear-gradient(180deg, rgba(226, 234, 216, 0.94), rgba(246, 248, 241, 0.96));
-    aspect-ratio: 1 / 1.18;
-}
-
-.office-card .staff-photo-wrap {
-    aspect-ratio: 1 / 1.12;
-}
-
-.support-card .staff-photo-wrap {
-    aspect-ratio: 1 / 1.18;
 }
 
 .staff-photo {
@@ -1486,27 +1502,21 @@ h3 {
 }
 
 .staff-card-body {
-    position: absolute;
-    inset: 0;
-    z-index: 4;
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
     min-width: 0;
-    padding: 1.25rem;
+    padding: 1rem;
     overflow: auto;
     background:
         linear-gradient(160deg, rgba(255, 255, 252, 0.97), rgba(238, 244, 230, 0.96)),
         linear-gradient(135deg, rgba(47, 107, 71, 0.1), transparent 58%);
-    opacity: 0;
-    transform: translateY(16px) scale(0.98);
-    pointer-events: none;
-    transition: opacity 0.24s ease, transform 0.24s ease;
+    transform: rotateY(180deg);
 }
 
 .staff-name {
     color: var(--brand-deep);
-    font-size: 1.35rem;
+    font-size: 1.12rem;
     line-height: 1.15;
 }
 
@@ -1516,40 +1526,22 @@ h3 {
 
 .staff-bio {
     color: var(--muted);
-    font-size: 0.96rem;
-    line-height: 1.55;
+    font-size: 0.88rem;
+    line-height: 1.48;
 }
 
 .support-card .staff-bio {
     overflow: visible;
 }
 
-.staff-card:hover .staff-card-body,
-.staff-card.is-expanded .staff-card-body {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-    pointer-events: auto;
+.staff-card:hover .staff-flip-inner,
+.staff-card.is-expanded .staff-flip-inner {
+    transform: rotateY(180deg);
 }
 
-.staff-card:hover .staff-tile-caption,
-.staff-card.is-expanded .staff-tile-caption {
-    opacity: 0;
-    transform: translateY(10px);
-}
-
-.profile-toggle {
-    width: fit-content;
-    margin-top: auto;
-    padding: 0.35rem 0;
-    border: 0;
-    background: transparent;
-    cursor: pointer;
-}
-
-.profile-toggle-caption {
-    margin-top: 0.25rem;
-    color: #fffdfa;
-    text-shadow: 0 2px 14px rgba(9, 28, 18, 0.45);
+.staff-card:focus-visible {
+    outline: 3px solid rgba(47, 107, 71, 0.38);
+    outline-offset: 4px;
 }
 
 .team-search-panel {
@@ -1821,7 +1813,7 @@ h3 {
     }
 
     .support-directory {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
@@ -1908,6 +1900,10 @@ h3 {
     .step-grid,
     .proof-grid {
         grid-template-columns: 1fr;
+    }
+
+    .support-directory {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .proof-copy {
@@ -2000,6 +1996,10 @@ h3 {
     .quick-link-grid {
         grid-template-columns: 1fr;
         padding: 0;
+    }
+
+    .support-directory {
+        grid-template-columns: 1fr;
     }
 
     .portrait-collage {
