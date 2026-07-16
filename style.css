@@ -1430,12 +1430,14 @@ h3 {
     min-height: 100%;
     border-radius: inherit;
     aspect-ratio: 1 / 1.08;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
     transition: transform 0.48s ease;
 }
 
 .support-card .staff-flip-inner {
     aspect-ratio: 1 / 1.08;
+    -webkit-transform-style: preserve-3d;
     transform-style: preserve-3d;
 }
 
@@ -1444,7 +1446,9 @@ h3 {
     inset: 0;
     overflow: hidden;
     border-radius: inherit;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
+    transform: rotateY(0deg);
 }
 
 .staff-photo-wrap {
@@ -1539,6 +1543,7 @@ h3 {
     background:
         linear-gradient(160deg, rgba(255, 255, 252, 0.97), rgba(238, 244, 230, 0.96)),
         linear-gradient(135deg, rgba(47, 107, 71, 0.1), transparent 58%);
+    -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
 }
 
@@ -1564,6 +1569,7 @@ h3 {
 
 .support-card:hover .staff-flip-inner,
 .support-card.is-expanded .staff-flip-inner {
+    -webkit-transform: rotateY(180deg);
     transform: rotateY(180deg);
 }
 
