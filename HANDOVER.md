@@ -136,8 +136,7 @@ If the admin page shows the configuration warning, check `assets/js/supabase-con
 The team page tries data sources in this order:
 
 1. Supabase `team_profiles`, if configured and published rows exist.
-2. The configured Google Sheet/CSV source.
-3. Local fallback data in `team-data.js`.
+2. Local fallback data in `team-data.js`.
 
 Normal update flow:
 

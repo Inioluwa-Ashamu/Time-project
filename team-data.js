@@ -1,5 +1,4 @@
 window.teamDirectoryConfig = {
-    "endpoint": "https://docs.google.com/spreadsheets/d/e/2PACX-1vTEc0lO0TJJwNxrtSknoGG_XNDZL7G2VYeRdtly4vp3cnlcJhp6sRkecvYbDWZSIgvBjys-HP6ep6pa/pub?gid=2077489984&single=true&output=csv",
     "fallback": [
         {
             "name": "Ally",
