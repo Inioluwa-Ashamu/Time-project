@@ -1399,6 +1399,22 @@ h3 {
     min-height: 100%;
 }
 
+.office-card .staff-flip-inner {
+    aspect-ratio: 1 / 1.04;
+    transform-style: flat;
+}
+
+.office-card .staff-photo {
+    transition: transform 0.45s ease, filter 0.45s ease;
+}
+
+.office-card:hover .staff-photo,
+.office-card:focus-visible .staff-photo,
+.office-card.is-expanded .staff-photo {
+    filter: saturate(1.04);
+    transform: scale(1.035);
+}
+
 .support-card {
     min-height: 100%;
 }
@@ -1418,12 +1434,9 @@ h3 {
     transition: transform 0.48s ease;
 }
 
-.office-card .staff-flip-inner {
-    aspect-ratio: 1 / 1.04;
-}
-
 .support-card .staff-flip-inner {
     aspect-ratio: 1 / 1.08;
+    transform-style: preserve-3d;
 }
 
 .staff-tile-face {
@@ -1495,6 +1508,21 @@ h3 {
     color: rgba(255, 253, 250, 0.88);
 }
 
+.staff-profile-action {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    min-height: 34px;
+    margin-top: 0.35rem;
+    padding: 0.42rem 0.72rem;
+    border-radius: 999px;
+    background: rgba(255, 253, 250, 0.9);
+    color: var(--brand-deep);
+    font-size: 0.82rem;
+    font-weight: 800;
+    line-height: 1.15;
+}
+
 .staff-card-header {
     display: flex;
     flex-direction: column;
@@ -1512,6 +1540,44 @@ h3 {
         linear-gradient(160deg, rgba(255, 255, 252, 0.97), rgba(238, 244, 230, 0.96)),
         linear-gradient(135deg, rgba(47, 107, 71, 0.1), transparent 58%);
     transform: rotateY(180deg);
+}
+
+.office-card .staff-card-body {
+    transform: none;
+}
+
+.staff-office-overlay {
+    z-index: 4;
+    justify-content: flex-end;
+    padding: 1.25rem;
+    background:
+        linear-gradient(180deg, rgba(255, 255, 252, 0.82), rgba(255, 255, 252, 0.98) 48%),
+        linear-gradient(135deg, rgba(47, 107, 71, 0.16), rgba(215, 191, 68, 0.12));
+    opacity: 0;
+    pointer-events: none;
+    transform: translateY(18px);
+    transition: opacity 0.28s ease, transform 0.28s ease;
+}
+
+.office-card.is-expanded .staff-office-overlay {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateY(0);
+}
+
+.staff-office-overlay .section-tag {
+    font-size: 0.72rem;
+}
+
+.staff-office-overlay .staff-bio {
+    font-size: 0.95rem;
+    line-height: 1.55;
+}
+
+.staff-close-action {
+    margin-top: 0.25rem;
+    background: var(--brand-deep);
+    color: #fff;
 }
 
 .staff-name {
@@ -1534,8 +1600,8 @@ h3 {
     overflow: visible;
 }
 
-.staff-card:hover .staff-flip-inner,
-.staff-card.is-expanded .staff-flip-inner {
+.support-card:hover .staff-flip-inner,
+.support-card.is-expanded .staff-flip-inner {
     transform: rotateY(180deg);
 }
 

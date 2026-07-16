@@ -295,6 +295,12 @@ const getInitials = (name) =>
         .join("")
         .toUpperCase();
 
+const getFirstName = (name) =>
+    String(name || "")
+        .trim()
+        .split(/\s+/)
+        .filter(Boolean)[0] || "profile";
+
 const normalizeTeamMember = (member) => ({
     name: member.name || member.display_name || member.Name || "",
     role: member.role || member.Role || "",
@@ -670,6 +676,34 @@ const renderTeamCard = (member, variant = "support") => {
     const imageMarkup = member.image_url
         ? `<img class="staff-photo" src="${escapeHtml(member.image_url)}" alt="${escapeHtml(member.name)}">`
         : "";
+    const firstName = getFirstName(member.name);
+
+    if (variant === "office") {
+        return `
+            <article class="${cardClass}" tabindex="0" role="button" aria-pressed="false" aria-label="Meet ${escapeHtml(member.name)}">
+                <div class="staff-flip-inner">
+                    <div class="staff-tile-face staff-photo-wrap">
+                        ${imageMarkup}
+                        <div class="staff-photo-fallback" aria-hidden="true">${escapeHtml(getInitials(member.name))}</div>
+                        <div class="staff-tile-caption">
+                            <h3 class="staff-name">${escapeHtml(member.name)}</h3>
+                            <p class="profile-role">${escapeHtml(member.role || "Office Team")}</p>
+                            <span class="staff-profile-action">Meet ${escapeHtml(firstName)}</span>
+                        </div>
+                    </div>
+                    <div class="staff-tile-face staff-card-body staff-office-overlay" aria-hidden="true">
+                        <div class="staff-card-header">
+                            <p class="section-tag">Office team</p>
+                            <h3 class="staff-name">${escapeHtml(member.name)}</h3>
+                            <p class="profile-role">${escapeHtml(member.role || "Office Team")}</p>
+                        </div>
+                        <p class="staff-bio">${escapeHtml(member.bio)}</p>
+                        <span class="staff-profile-action staff-close-action">Close profile</span>
+                    </div>
+                </div>
+            </article>
+        `;
+    }
 
     return `
         <article class="${cardClass}" tabindex="0" role="button" aria-pressed="false" aria-label="${escapeHtml(member.name)} profile">
@@ -849,6 +883,10 @@ const initTeamDirectory = async () => {
 
         const isExpanded = card.classList.toggle("is-expanded");
         card.setAttribute("aria-pressed", String(isExpanded));
+        const overlay = card.querySelector(".staff-office-overlay");
+        if (overlay) {
+            overlay.setAttribute("aria-hidden", String(!isExpanded));
+        }
     };
 
     const toggleProfileCardWithKeyboard = (event) => {
@@ -864,6 +902,21 @@ const initTeamDirectory = async () => {
     officeDirectory.addEventListener("keydown", toggleProfileCardWithKeyboard);
     supportDirectory.addEventListener("click", toggleProfileCard);
     supportDirectory.addEventListener("keydown", toggleProfileCardWithKeyboard);
+
+    document.addEventListener("keydown", (event) => {
+        if (event.key !== "Escape") {
+            return;
+        }
+
+        document.querySelectorAll(".office-card.is-expanded").forEach((card) => {
+            card.classList.remove("is-expanded");
+            card.setAttribute("aria-pressed", "false");
+            const overlay = card.querySelector(".staff-office-overlay");
+            if (overlay) {
+                overlay.setAttribute("aria-hidden", "true");
+            }
+        });
+    });
 };
 
 initTeamDirectory();
