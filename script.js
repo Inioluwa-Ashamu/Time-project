@@ -777,6 +777,7 @@ const initTeamDirectory = async () => {
     const initialSupportCount = 12;
     const supportBatchSize = 12;
     let visibleSupportCount = initialSupportCount;
+    let activeSupportCard = null;
 
     const config = window.teamDirectoryConfig || {};
     let teamMembers = Array.isArray(config.fallback) ? config.fallback.slice() : [];
@@ -831,6 +832,7 @@ const initTeamDirectory = async () => {
     attachImageFallbacks();
 
     const renderSupportMembers = (query = "") => {
+        activeSupportCard = null;
         const searchTerm = query.trim().toLowerCase();
         const filteredMembers = supportMembers.filter((member) => {
             if (!searchTerm) {
@@ -968,14 +970,31 @@ const initTeamDirectory = async () => {
         }
     });
 
+    const closeActiveSupportCard = () => {
+        if (!activeSupportCard) {
+            return;
+        }
+
+        activeSupportCard.classList.remove("is-expanded");
+        activeSupportCard.setAttribute("aria-pressed", "false");
+        activeSupportCard = null;
+    };
+
     const toggleSupportProfileCard = (event) => {
         const card = event.target.closest(".staff-card");
         if (!card || card.classList.contains("office-card")) {
             return;
         }
 
-        const isExpanded = card.classList.toggle("is-expanded");
-        card.setAttribute("aria-pressed", String(isExpanded));
+        if (activeSupportCard === card) {
+            closeActiveSupportCard();
+            return;
+        }
+
+        closeActiveSupportCard();
+        card.classList.add("is-expanded");
+        card.setAttribute("aria-pressed", "true");
+        activeSupportCard = card;
     };
 
     const toggleSupportProfileCardWithKeyboard = (event) => {
@@ -998,6 +1017,7 @@ const initTeamDirectory = async () => {
         }
 
         closeOfficeProfileModal();
+        closeActiveSupportCard();
     });
 };
 
