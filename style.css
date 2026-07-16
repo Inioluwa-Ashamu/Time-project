@@ -869,7 +869,7 @@ h3 {
 }
 
 .office-directory {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.85rem;
 }
 
@@ -2152,10 +2152,6 @@ body.profile-modal-open {
     .quick-link-grid {
         grid-template-columns: 1fr;
         padding: 0;
-    }
-
-    .support-directory {
-        grid-template-columns: 1fr;
     }
 
     .portrait-collage {
