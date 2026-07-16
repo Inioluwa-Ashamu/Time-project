@@ -128,6 +128,22 @@ const getAuthLinkType = () => {
 
 const isPasswordSetupType = (type) => ["recovery", "invite"].includes(String(type).toLowerCase());
 
+const getAuthUrlValue = (key) => {
+    const params = new URLSearchParams(window.location.search);
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    return params.get(key) || hash.get(key) || "";
+};
+
+const hasSupabaseAuthCallback = () =>
+    Boolean(
+        getAuthUrlValue("code") ||
+        getAuthUrlValue("access_token") ||
+        getAuthUrlValue("refresh_token") ||
+        getAuthUrlValue("token_hash")
+    );
+
+const getAuthUrlError = () => getAuthUrlValue("error_description") || getAuthUrlValue("error");
+
 const cleanAuthUrl = () => {
     const url = new URL(window.location.href);
     const authParams = [
@@ -629,9 +645,17 @@ const initAdmin = async () => {
 
     const client = getClient();
     const authLinkType = getAuthLinkType();
-    if (isPasswordSetupType(authLinkType)) {
+    const authUrlError = getAuthUrlError();
+
+    if (authUrlError) {
+        showError(loginError, authUrlError.replaceAll("+", " "));
+        cleanAuthUrl();
+    } else if (isPasswordSetupType(authLinkType)) {
         passwordSetupRequired = true;
         passwordSetupReason = authLinkType.toLowerCase();
+    } else if (hasSupabaseAuthCallback()) {
+        passwordSetupRequired = true;
+        passwordSetupReason = "setup";
     }
 
     const { data } = await client.auth.getSession();
@@ -644,8 +668,9 @@ const initAdmin = async () => {
             return;
         }
 
-        if (event === "SIGNED_IN" && isPasswordSetupType(getAuthLinkType())) {
-            showPasswordSetup(getAuthLinkType().toLowerCase());
+        if (event === "SIGNED_IN" && (passwordSetupRequired || isPasswordSetupType(getAuthLinkType()) || hasSupabaseAuthCallback())) {
+            const callbackType = getAuthLinkType();
+            showPasswordSetup(isPasswordSetupType(callbackType) ? callbackType.toLowerCase() : passwordSetupReason || "setup");
             cleanAuthUrl();
             return;
         }
