@@ -671,7 +671,7 @@ const resolveTeamEndpoint = (config) => {
     return config.endpoint || source.endpoint || "";
 };
 
-const renderTeamCard = (member, variant = "support") => {
+const renderTeamCard = (member, variant = "support", index = 0) => {
     const cardClass = variant === "office" ? "profile-card staff-card staff-tile office-card" : "profile-card staff-card staff-tile support-card";
     const imageMarkup = member.image_url
         ? `<img class="staff-photo" src="${escapeHtml(member.image_url)}" alt="${escapeHtml(member.name)}">`
@@ -680,7 +680,7 @@ const renderTeamCard = (member, variant = "support") => {
 
     if (variant === "office") {
         return `
-            <article class="${cardClass}" tabindex="0" role="button" aria-pressed="false" aria-label="Meet ${escapeHtml(member.name)}">
+            <article class="${cardClass}" tabindex="0" role="button" aria-label="Meet ${escapeHtml(member.name)}" data-office-profile-index="${index}">
                 <div class="staff-flip-inner">
                     <div class="staff-tile-face staff-photo-wrap">
                         ${imageMarkup}
@@ -690,15 +690,6 @@ const renderTeamCard = (member, variant = "support") => {
                             <p class="profile-role">${escapeHtml(member.role || "Office Team")}</p>
                             <span class="staff-profile-action">Meet ${escapeHtml(firstName)}</span>
                         </div>
-                    </div>
-                    <div class="staff-tile-face staff-card-body staff-office-overlay" aria-hidden="true">
-                        <div class="staff-card-header">
-                            <p class="section-tag">Office team</p>
-                            <h3 class="staff-name">${escapeHtml(member.name)}</h3>
-                            <p class="profile-role">${escapeHtml(member.role || "Office Team")}</p>
-                        </div>
-                        <p class="staff-bio">${escapeHtml(member.bio)}</p>
-                        <span class="staff-profile-action staff-close-action">Close profile</span>
                     </div>
                 </div>
             </article>
@@ -738,6 +729,36 @@ const attachImageFallbacks = () => {
             { once: true }
         );
     });
+};
+
+const createOfficeProfileModal = () => {
+    const modal = document.createElement("section");
+    modal.className = "profile-modal";
+    modal.id = "office-profile-modal";
+    modal.setAttribute("role", "dialog");
+    modal.setAttribute("aria-modal", "true");
+    modal.setAttribute("aria-labelledby", "office-profile-title");
+    modal.hidden = true;
+
+    modal.innerHTML = `
+        <div class="profile-modal-backdrop" data-profile-modal-close></div>
+        <div class="profile-modal-panel" role="document">
+            <button class="profile-modal-close" type="button" aria-label="Close profile" data-profile-modal-close>Close</button>
+            <div class="profile-modal-image-wrap">
+                <img class="profile-modal-image" alt="">
+                <div class="profile-modal-fallback" aria-hidden="true"></div>
+            </div>
+            <div class="profile-modal-copy">
+                <p class="section-tag">Office team</p>
+                <h2 id="office-profile-title"></h2>
+                <p class="profile-role"></p>
+                <p class="staff-bio"></p>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+    return modal;
 };
 
 const initTeamDirectory = async () => {
@@ -806,7 +827,7 @@ const initTeamDirectory = async () => {
     const officeMembers = normalizedMembers.filter((member) => member.team === "office");
     const supportMembers = normalizedMembers.filter((member) => member.team !== "office");
 
-    officeDirectory.innerHTML = officeMembers.map((member) => renderTeamCard(member, "office")).join("");
+    officeDirectory.innerHTML = officeMembers.map((member, index) => renderTeamCard(member, "office", index)).join("");
     attachImageFallbacks();
 
     const renderSupportMembers = (query = "") => {
@@ -875,47 +896,108 @@ const initTeamDirectory = async () => {
         });
     }
 
-    const toggleProfileCard = (event) => {
-        const card = event.target.closest(".staff-card");
+    const profileModal = createOfficeProfileModal();
+    const profileModalImage = profileModal.querySelector(".profile-modal-image");
+    const profileModalFallback = profileModal.querySelector(".profile-modal-fallback");
+    const profileModalTitle = profileModal.querySelector("#office-profile-title");
+    const profileModalRole = profileModal.querySelector(".profile-role");
+    const profileModalBio = profileModal.querySelector(".staff-bio");
+    const profileModalClose = profileModal.querySelector(".profile-modal-close");
+    let activeOfficeCard = null;
+
+    const closeOfficeProfileModal = () => {
+        if (profileModal.hidden) {
+            return;
+        }
+
+        profileModal.hidden = true;
+        document.body.classList.remove("profile-modal-open");
+
+        if (activeOfficeCard) {
+            activeOfficeCard.focus();
+            activeOfficeCard = null;
+        }
+    };
+
+    const openOfficeProfileModal = (member, card) => {
+        activeOfficeCard = card;
+        profileModalTitle.textContent = member.name;
+        profileModalRole.textContent = member.role || "Office Team";
+        profileModalBio.textContent = member.bio;
+        profileModalFallback.textContent = getInitials(member.name);
+
+        if (member.image_url) {
+            profileModalImage.src = member.image_url;
+            profileModalImage.alt = member.name;
+            profileModalImage.hidden = false;
+        } else {
+            profileModalImage.removeAttribute("src");
+            profileModalImage.alt = "";
+            profileModalImage.hidden = true;
+        }
+
+        profileModal.hidden = false;
+        document.body.classList.add("profile-modal-open");
+        profileModalClose.focus();
+    };
+
+    const openOfficeProfileFromEvent = (event) => {
+        const card = event.target.closest(".office-card");
         if (!card) {
             return;
         }
 
-        const isExpanded = card.classList.toggle("is-expanded");
-        card.setAttribute("aria-pressed", String(isExpanded));
-        const overlay = card.querySelector(".staff-office-overlay");
-        if (overlay) {
-            overlay.setAttribute("aria-hidden", String(!isExpanded));
+        const member = officeMembers[Number(card.dataset.officeProfileIndex)];
+        if (member) {
+            openOfficeProfileModal(member, card);
         }
     };
 
-    const toggleProfileCardWithKeyboard = (event) => {
+    const openOfficeProfileFromKeyboard = (event) => {
         if (event.key !== "Enter" && event.key !== " ") {
             return;
         }
 
         event.preventDefault();
-        toggleProfileCard(event);
+        openOfficeProfileFromEvent(event);
     };
 
-    officeDirectory.addEventListener("click", toggleProfileCard);
-    officeDirectory.addEventListener("keydown", toggleProfileCardWithKeyboard);
-    supportDirectory.addEventListener("click", toggleProfileCard);
-    supportDirectory.addEventListener("keydown", toggleProfileCardWithKeyboard);
+    profileModal.addEventListener("click", (event) => {
+        if (event.target.closest("[data-profile-modal-close]")) {
+            closeOfficeProfileModal();
+        }
+    });
+
+    const toggleSupportProfileCard = (event) => {
+        const card = event.target.closest(".staff-card");
+        if (!card || card.classList.contains("office-card")) {
+            return;
+        }
+
+        const isExpanded = card.classList.toggle("is-expanded");
+        card.setAttribute("aria-pressed", String(isExpanded));
+    };
+
+    const toggleSupportProfileCardWithKeyboard = (event) => {
+        if (event.key !== "Enter" && event.key !== " ") {
+            return;
+        }
+
+        event.preventDefault();
+        toggleSupportProfileCard(event);
+    };
+
+    officeDirectory.addEventListener("click", openOfficeProfileFromEvent);
+    officeDirectory.addEventListener("keydown", openOfficeProfileFromKeyboard);
+    supportDirectory.addEventListener("click", toggleSupportProfileCard);
+    supportDirectory.addEventListener("keydown", toggleSupportProfileCardWithKeyboard);
 
     document.addEventListener("keydown", (event) => {
         if (event.key !== "Escape") {
             return;
         }
 
-        document.querySelectorAll(".office-card.is-expanded").forEach((card) => {
-            card.classList.remove("is-expanded");
-            card.setAttribute("aria-pressed", "false");
-            const overlay = card.querySelector(".staff-office-overlay");
-            if (overlay) {
-                overlay.setAttribute("aria-hidden", "true");
-            }
-        });
+        closeOfficeProfileModal();
     });
 };
 
