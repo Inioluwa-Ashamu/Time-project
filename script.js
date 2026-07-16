@@ -666,28 +666,29 @@ const resolveTeamEndpoint = (config) => {
 };
 
 const renderTeamCard = (member, variant = "support") => {
-    const cardClass = variant === "office" ? "profile-card staff-card office-card" : "profile-card staff-card support-card";
+    const cardClass = variant === "office" ? "profile-card staff-card staff-tile office-card" : "profile-card staff-card staff-tile support-card";
     const imageMarkup = member.image_url
         ? `<img class="staff-photo" src="${escapeHtml(member.image_url)}" alt="${escapeHtml(member.name)}">`
         : "";
-    const actionMarkup =
-        variant === "support"
-            ? `<button class="text-link profile-toggle" type="button" aria-expanded="false">Read full profile</button>`
-            : "";
 
     return `
         <article class="${cardClass}">
             <div class="staff-photo-wrap">
                 ${imageMarkup}
                 <div class="staff-photo-fallback" aria-hidden="true">${escapeHtml(getInitials(member.name))}</div>
-            </div>
-            <div class="staff-card-body">
-                <div class="staff-card-header">
+                <div class="staff-tile-caption">
                     <h3 class="staff-name">${escapeHtml(member.name)}</h3>
                     <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
+                    <button class="text-link profile-toggle profile-toggle-caption" type="button" aria-expanded="false">View bio</button>
                 </div>
-                <p class="staff-bio">${escapeHtml(member.bio)}</p>
-                ${actionMarkup}
+                <div class="staff-card-body">
+                    <div class="staff-card-header">
+                        <h3 class="staff-name">${escapeHtml(member.name)}</h3>
+                        <p class="profile-role">${escapeHtml(member.role || "Support Worker")}</p>
+                    </div>
+                    <p class="staff-bio">${escapeHtml(member.bio)}</p>
+                    <button class="text-link profile-toggle" type="button" aria-expanded="false">View bio</button>
+                </div>
             </div>
         </article>
     `;
@@ -840,18 +841,22 @@ const initTeamDirectory = async () => {
         });
     }
 
-    supportDirectory.addEventListener("click", (event) => {
+    const toggleProfileCard = (event) => {
         const toggle = event.target.closest(".profile-toggle");
         if (!toggle) {
             return;
         }
 
-        const card = toggle.closest(".support-card");
+        const card = toggle.closest(".staff-card");
         const isExpanded = card.classList.toggle("is-expanded");
-        toggle.setAttribute("aria-expanded", String(isExpanded));
-        toggle.textContent = isExpanded ? "Show less" : "Read full profile";
-    });
+        card.querySelectorAll(".profile-toggle").forEach((button) => {
+            button.setAttribute("aria-expanded", String(isExpanded));
+            button.textContent = isExpanded ? "Hide bio" : "View bio";
+        });
+    };
 
+    officeDirectory.addEventListener("click", toggleProfileCard);
+    supportDirectory.addEventListener("click", toggleProfileCard);
 };
 
 initTeamDirectory();
